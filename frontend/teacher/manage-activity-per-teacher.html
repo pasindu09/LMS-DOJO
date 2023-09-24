@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet" href="../styles.css">
+
+</head>
+
+<body>
+
+
+
+  <div id="app">
+
+    <aside id="sidepanel" class="w-64 bg-black text-white max-md:w-0">
+      <sidebar></sidebar>
+    </aside>
+
+    <div class="overflow-x-auto">
+
+
+ 
+
+      <div class="max-w-lg w-2/3 lg:ml-96 lg:max-w-full mt-4 sm:mt-4" v-for="activity in activities" :key="activity.id">
+
+        <div  class="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+          <div class="mb-8">
+            <div class="text-gray-900 font-bold text-xl mb-2">{{ activity.activityName }}</div>
+            <p class="text-gray-600">Submission Time: {{ activity.submissiontime }}</p>
+            <p class="text-gray-700 text-base">{{ activity.activityDescription }}</p>
+            <p class="text-gray-900 leading-none">Due Date : {{ activity.dueDate }}</p>
+            <p class="text-gray-600"> Activity ID: {{ activity.Activity_ID }}</p>
+            <div class="flex items-center">
+            <ul>
+              <li class="text-gray-600" v-for="forclass in activity.forclasses" :key="forclass">{{forclass}}</li>
+            </ul>
+          </div>
+          </div>
+          
+
+          <button class=" w-64  bg-orange-600 text-white font-bold py-1 px-4 rounded mb-2"
+          @click="viewSubmissionsForActivity(activity.Activity_ID)">View Submissions</button>
+
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded w-64 mb-2"
+          @click="openUpdateActivityPopup(activity)"> Edit
+        </button>
+
+        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded w-64 mb-2"
+          @click="confirmDeleteActivity(activity._id)">
+          Delete
+        </button>
+          </div>
+          
+    </div>
+
+
+
+      <!-- Edit Activity Popup -->
+
+      <div v-if="showEditActivityPopup" class="fixed inset-0 flex items-center justify-center  bg-white max-w-3xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
+        <div ref="popupContainer" class="bg-white h-2 w-full">
+          <div class="popup-content">
+            <h2 class="text-xl font-bold mb-4">Edit Activity</h2>
+            <form @submit.prevent="submitEditActivityForm">
+              <div class="flex flex-col mb-4">
+                <label for="editactivityName" class="text-gray-700">Activity Name:</label>
+                <input v-model="editedActivity.activityName" type="text" id="editactivityName" name="editactivityName"
+                  class="border border-gray-300 rounded-md p-2">
+              </div>
+              <div class="flex flex-col mb-4">
+                <label for="editdueDate" class="text-gray-700">Activity Date:</label>
+                <input v-model="editedActivity.dueDate" type="date" id="editdueDate" name="editdueDate"
+                  class="border border-gray-300 rounded-md p-2">
+              </div>
+
+              <div class="flex flex-col mb-4">
+                <label for="editsubmissiontime" class="text-gray-700">submission time:</label>
+                <input v-model="editedActivity.submissiontime" type="time" id="editsubmissiontime"
+                  name="editsubmissiontime" class="border border-gray-300 rounded-md p-2">
+              </div>
+
+              <div class="flex flex-col mb-4">
+                <label for="editactivityDescription" class="text-gray-700">Activity Description:</label>
+                <input v-model="editedActivity.activityDescription" type="text" id="editactivityDescription"
+                  name="editactivityDescription" class="border border-gray-300 rounded-md p-2">
+              </div>
+
+              <div class="flex flex-col mb-4">
+                <label for="editforclasses" class="text-gray-700">Activity For Classes:</label>
+                <input v-model="editedActivity.forclasses" type="text" id="editforclasses" name="editforclasses"
+                  class="border border-gray-300 rounded-md p-2">
+
+              </div>
+
+              <div class="mt-4">
+                <label for="editforclasses">Classes:</label>
+                <div class="flex flex-col scrollable-list" id="editforclasses" name="editforclasses">
+                  <label v-for="TclassOption in TeacherclassOptions" :key="TclassOption">
+                    <input type="checkbox" class="form-checkbox h-5 w-5 text-gray-600" :value="TclassOption"
+                      v-model="editedActivity.forclasses">
+                    <span class="ml-2 text-gray-700">{{ TclassOption }}</span>
+                  </label>
+                </div>
+              </div>
+
+
+
+              <div class="mt-4">
+                <label for="editforclasses">New classes</label>
+                <ul class="flex flex-col scrollable-list" id="editforclasses" name="editforclasses">
+                  <li v-for="editforclass in editedActivity.forclasses" :key="editforclass">
+                    <span>{{ editforclass }}</span>
+                  </li>
+                </ul>
+              </div>
+
+
+
+              <div class="flex flex-col mb-4">
+                <label for="editActivity_ID" class="text-gray-700">Activity ID:</label>
+                <input v-model="editedActivity.Activity_ID" type="text" id="editActivity_ID name=" editActivity_ID
+                  class="border border-gray-300 rounded-md p-2">
+              </div>
+
+
+              <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-2"
+                @click="showEditActivityPopup = false">Cancel
+              </button>
+              <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save
+                Changes</button>
+          </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+    <div v-if="showSubmissionsPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" >
+      <div ref="popupContainer" class="bg-white max-w-3xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
+        <div class="popup-content">
+          <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-2"
+          @click="showSubmissionsPopup = false">Close
+        </button>
+  
+      <table  class="w-full table-auto table-auto">
+      <thead>
+        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+          <th class="py-3 px-6 text-left">Student Email</th>
+          <th class="py-3 px-6 text-left">Submission Name</th>
+          <th class="py-3 px-6 text-left">Submission File</th>
+          <th class="py-3 px-6 text-left">Delete</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-600 text-sm font-light">
+        <tr v-for="submission in submissions" :key="submission._id" class="border-b border-gray-200 hover:bg-gray-100">
+          <td class="py-3 px-6 text-left whitespace-nowrap">{{submission.studentEmail}}</td>
+          <td class="py-3 px-6 text-left whitespace-nowrap">{{submission.submissionName}}</td>
+          <td class="py-3 px-6 text-left whitespace-nowrap">{{submission.submissionFile}}</td>
+
+          <td><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" @click="confirmDeleteSubmission(submission._id)">
+            Delete
+          </button></td>
+          <td>
+            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" @click="downloadFile(submission.submissionFile)">Download</button>
+
+          </td>
+        </tr>
+      </tbody>
+</table>
+</div>
+
+
+
+
+
+
+  </div>
+</div>
+</div>
+
+
+
+
+
+  <script src="../sidebar.js"></script>
+  <script src="../app.js"></script>
+</body>
+
+</html>

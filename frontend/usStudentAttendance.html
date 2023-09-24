@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>us-student attendance</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+</head>
+
+<body class="bg-gray-100 p-8">
+    <div id="app">
+  <div class="max-w-4xl mx-auto bg-white p-8 rounded shadow-lg">
+
+      <h1 class="text-3xl font-bold mb-6">My Attendance Tab</h1>
+
+      <div class="overflow-x-auto">
+          <table class="min-w-full border border-gray-300">
+              <thead>
+                  <tr class="bg-gray-100">
+                      <th class="py-3 px-6 border-b text-center">Subject</th>
+                      <th class="py-3 px-6 border-b text-center">Attendance (%)</th>
+                  </tr>
+              </thead>
+              <tbody>
+
+                <tr v-for="(Subject, index) in arrayofsubjects" :key="index">
+                    <td class="py-2 px-6 border-b text-center">{{ Subject }}</td>
+                    <td class="py-2 px-6 border-b text-center">{{ myattendancenew[index] }}</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+
+  </div>
+</div>
+  <script src="../../app.js"></script>
+
+</body>
+
+
+</html>
