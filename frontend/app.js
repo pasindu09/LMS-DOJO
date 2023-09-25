@@ -1265,14 +1265,18 @@ new Vue({
       subject: this.subject,
       studentByClasss,
     }
-
+    const shouldCreate = confirm("Are you sure you want to create this class?");
+  
+    if (shouldCreate) {
       axios
-      .post('/class/createClass',data)
-      .then(response => {
-        alert(response.data.message);
-      }).catch(error => {
-        console.error(error);
-      });
+        .post('/class/createClass', data)
+        .then(response => {
+          alert(response.data.message);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
 
       // console.log(this.class);
       // var studentObject = {studentName: 1, studentEmail: 3, studentClass: teacherclass};
