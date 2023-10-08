@@ -988,11 +988,13 @@ new Vue({
           grade: this.grade,
           feedback: this.feedback
         });
-
+          
         openGradesPopup = false;
 
         // Handle the response as needed (show a success message, etc.)
         console.log('Grades added successfully', response.data);
+        alert('Grades added successfully!');
+
       } catch (error) {
         // Handle errors (show an error message, log the error, etc.)
         console.error('Error adding grades:', error);
