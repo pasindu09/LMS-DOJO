@@ -89,6 +89,8 @@ const SubmissionStorage = multer.diskStorage({
 
 });
 
+
+
 const SubmissionUpload = multer({ storage : SubmissionStorage ,
     limits: {
         fileSize: 2 * 1024 * 1024 * 1024
@@ -104,6 +106,63 @@ app.post('/uploads' , SubmissionUpload.single('submissionFile') , (req, res) => 
     
 
 });
+
+const ActivityStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null , path.join( "./activityUploads"))
+    },
+    filename: (req, file, cb) => {
+        cb(null , file.originalname)
+    }
+
+});
+
+
+const activityUpload = multer({ storage : ActivityStorage , 
+    limits: {
+        fileSize: 2 * 1024 * 1024 * 1024
+       },
+})
+
+app.post('/teacheruploads' , activityUpload.single('activityFile') , (req, res) => {
+    console.log(req.body);
+    console.log(req.file);
+
+    return res.send(req.file);
+
+});
+
+
+app.get('/downloadLearningMaterial', (req, res) => {
+    const filename = req.query.filename;    
+    const filePath = path.join(__dirname, 'activityUploads', filename);
+    console.log(filePath);
+    // Determine the appropriate content type based on the file extension
+    let contentType = 'application/octet-stream'; // Default content type
+    if( filename.endsWith('.pdf')){
+        contentType = 'application/pdf';
+    }else if( filename.endsWith('.jpg') || filename.endsWith('.jpeg')){
+        contentType = 'image/jpeg';
+    }
+    else if( filename.endsWith('.png')){
+        contentType = 'image/png';
+    }
+    else if( filename.endsWith('.doc') || filename.endsWith('.docx')){
+        contentType = 'application/msword'; // For Word documents
+    }
+    const contentDisposition = `attachment; filename="${filename}"`;
+    res.setHeader('Content-Disposition', contentDisposition);
+    res.setHeader('Content-Type', contentType);
+    
+    const fileStream = fs.createReadStream(filePath);
+    fileStream.on('error', (error) => {
+        console.error('Error reading the file:', error);
+        res.status(500).send('Error reading the file');
+    });
+    fileStream.pipe(res);
+}
+);
+
 
 app.get('/download', (req, res) => {
     const filename = req.query.filename;

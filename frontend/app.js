@@ -107,22 +107,23 @@ new Vue({
   el: '#app',
   data() {
     return {
-      myattendancenew:[],
+      myattendancenew: [],
       idoftheuser: '',
       arrayofsubjectstwo: [],
       arrayofpresent: [],
       valueforexample: 'valueforexample',
-      arrayofsubjects:[],
+      arrayofsubjects: [],
       veryweird: '',
-      userrn:[],
+      userrn: [],
       studentByClass: [],
       teacherusercount: '',
       showSubmissionsPopup: false,
+      openGradesPopup: false,
       TeacherclassOptions: ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C', '7A', '7B', '7C', '8A', '8B', '8C', '9A', '9B', '9C', '10A', '10B', '10C', '11A', '11B', '11C', '12A', '12B', '12C'],
       teacherclasses: [],
       userSubjects: [],
       studentUsers: [],
-      studentUserCount:'',
+      studentUserCount: '',
       classname: '',
       adminUsers: [],
       admincount: '',
@@ -132,7 +133,7 @@ new Vue({
       submissions: [],
       activities: [],
       subjects: [],
-      searchQuery:  '',
+      searchQuery: '',
       selectedSubjects: [],
       Activity_ID: '',
       ActivityID: '',
@@ -149,18 +150,37 @@ new Vue({
       password: '',
       loginError: '',
       nameclass: '',
-      myattendance:[],
+      myattendance: [],
       date: '',
       sessionStart: '',
       sessionEnd: '',
       subject: '',
-      subjectsForUserarray:'',
+      subjectsForUserarray: '',
       showEditActivityPopup: false,
       openCreateUserPopup: false,
       showEditUserPopup: false,
       showEditEventPopup: false,
       showEditSubjectPopup: false,
       isFileInputDisabled: false,
+      grades: '',
+      feedback: '',
+      submission: '',
+      activityId: '',
+      studentEmail: '',
+      grade: 0,
+      hasGrade: false,
+      openGradesBoardPopUp: false,
+      ShowEditGradesForm: false,
+      selectedActivityForGrade: null,
+      grades: [],
+      theresultspopupisopen: false,
+      results: null,
+    
+
+    
+    
+
+
 
       classOptions: ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C', '7A', '7B', '7C', '8A', '8B', '8C', '9A', '9B', '9C', '10A', '10B', '10C', '11A', '11B', '11C', '12A', '12B', '12C'],
       user: {
@@ -201,7 +221,10 @@ new Vue({
         createdBy: '',
         Activity_ID: '',
         submissionStatus: '',
-        ActivityselectedSubjects: []
+        ActivityselectedSubjects: [],
+        activityFile: '' 
+
+
 
       },
 
@@ -234,6 +257,15 @@ new Vue({
 
       },
 
+      editedGrades: {
+        selectedActivityId: '',
+        studentEmail: '',
+        grade: '',
+        feedback: ''
+      },
+
+
+
       submission: {
         submissionName: '',
         submissionFile: null,
@@ -262,21 +294,28 @@ new Vue({
       },
 
 
+
+
+
     };
   },
 
   mounted() {
-    this.getStudentUsers();
+  // this.getStudentUsers();
     this.getAdminUsers();
-    this.getTeacherUsers();
+     this.getTeacherUsers();
     this.getAllSubjects();
-    this.getAllEvents();
-    this.getAllClasses();
-    //this.getAllActivities();
-    this.getActivitiesPerTeacher();
-    //this.getSubmissionsByActivity();
+     this.getAllEvents();
+     this.getAllClasses();
     this.getActivitiesPerClass();
+
+    //do not uncomment  this.getAllActivities();
+    //do not uncomment this.getSubmissionsByActivity();
+
+    this.getActivitiesPerTeacher();
+
     this.getAllSubmissions();
+
   },
 
 
@@ -286,7 +325,7 @@ new Vue({
     this.getAllTimetables();
     this.loadClassName();
     this.subjectsForUser();
-    this.getmyattendance();
+    //  this.getmyattendance();
   },
 
   computed: {
@@ -335,10 +374,14 @@ new Vue({
       });
     },
 
- totalcount(){
-  return this.studentUserCount + this.teacherusercount + this.admincount;
- },
-    
+    totalcount() {
+      return this.studentUserCount + this.teacherusercount + this.admincount;
+    },
+
+    buttonText() {
+      return this.hasGrade ? 'Edit marks' : 'Add grades';
+    }
+
 
   },
 
@@ -349,6 +392,38 @@ new Vue({
   methods: {
 
 
+    async downloadLearningMaterial(filename) {
+     try {
+      const encodedFilename = encodeURIComponent(filename);
+      const response = await axios.get(`/downloadLearningMaterial?filename=${encodedFilename}`, {
+        responseType: 'blob',
+      });
+
+      const blob = new Blob([response.data], { type: 'application/octet-stream' });
+
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+
+      // Decode the filename before setting it as the download attribute
+      const decodedFilename = decodeURIComponent(filename);
+      downloadLink.download = decodedFilename;
+
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+
+      URL.revokeObjectURL(downloadLink.href);
+      
+     } catch (error) {
+        console.error(error);
+
+
+      
+     }
+
+
+    },
+
 
     async downloadFile(filename) {
       try {
@@ -356,22 +431,22 @@ new Vue({
         const response = await axios.get(`/download?filename=${encodedFilename}`, {
           responseType: 'blob',
         });
-    
+
         const blob = new Blob([response.data], { type: 'application/octet-stream' });
-    
+
         const downloadLink = document.createElement('a');
         downloadLink.href = URL.createObjectURL(blob);
-    
+
         // Decode the filename before setting it as the download attribute
         const decodedFilename = decodeURIComponent(filename);
         downloadLink.download = decodedFilename;
-    
+
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
-    
+
         URL.revokeObjectURL(downloadLink.href);
-    
+
       } catch (error) {
         console.error(error);
       }
@@ -472,7 +547,7 @@ new Vue({
     getStudentUsers() {
       axios.get('/admin/getStudentUsers')
         .then(response => {
-          console.log(response.data);
+         // console.log(response.data);
           this.studentUsers = response.data.data;
           this.studentUserCount = response.data.data.length;
         })
@@ -483,7 +558,7 @@ new Vue({
     getAdminUsers() {
       axios.get('/admin/getAdminUsers')
         .then(response => {
-          console.log(response.data);
+         // console.log(response.data);
           this.adminUsers = response.data.data;
           this.admincount = response.data.data.length;
         })
@@ -703,7 +778,26 @@ new Vue({
       // Set the currentemail to the activity object
       this.activity.createdBy = currentemail;
       console.log(currentemail);
-      axios.post('/activity/createActivity', this.activity)
+
+      const formData = new FormData();
+      formData.append("activityName", this.activity.activityName);
+      formData.append("activityDescription", this.activity.activityDescription);
+      formData.append("dueDate", this.activity.dueDate);
+      formData.append("submissiontime", this.activity.submissiontime);
+      formData.append("forclasses", this.activity.forclasses);
+      formData.append("submissionLink", this.activity.submissionLink);
+      formData.append("downloadLink", this.activity.downloadLink);
+      formData.append("submissionGrade", this.activity.submissionGrade);
+      formData.append("feedback", this.activity.feedback);
+      formData.append("createdBy", this.activity.createdBy);
+      formData.append("Activity_ID", this.activity.Activity_ID);
+      formData.append("activityFile", this.activityFile);
+     
+      axios.post('/activity/createActivity', formData ,{
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
         .then(response => {
           alert(response.data.message);
           console.log("Created Activity Data:", response.data.data);
@@ -719,6 +813,7 @@ new Vue({
           this.activity.feedback = '';
           this.activity.createdBy = currentemail;
           this.activity.Activity_ID = '';
+          this.activityFile = null;
 
 
         })
@@ -734,25 +829,25 @@ new Vue({
 
 
 
-    getAllActivities() {
-      axios.get('/activity/getAllactivities')
-        .then(response => {
-          console.log(response.data);
-          this.activities = response.data.data;
-        }
-        ).catch(error => {
-          console.error(error);
-        }
-        );
+    // getAllActivities() {
+    //   axios.get('/activity/getAllactivities')
+    //     .then(response => {
+    //       console.log(response.data);
+    //       this.activities = response.data.data;
+    //     }
+    //     ).catch(error => {
+    //       console.error(error);
+    //     }
+    //     );
 
-    },
+    // },
 
     getActivitiesPerTeacher() {
       const currentemail = localStorage.getItem('Currentemail');
       console.log(currentemail)
       axios.get(`/activity/getActivitiesPerTeacher/${currentemail}`)
         .then(response => {
-          console.log(response.data);
+          //console.log(response.data);
           this.activities = response.data.data;
         }
         ).catch(error => {
@@ -774,8 +869,9 @@ new Vue({
       const studentclass = localStorage.getItem('studentClass');
       console.log(studentclass);
       axios.get(`/activity/getActivitiesPerClass/${studentclass}`)
+
         .then(response => {
-          console.log(response.data);
+          // console.log(response.data);
           this.activities = response.data.data;
 
         }
@@ -784,7 +880,37 @@ new Vue({
         }
         );
 
+
     },
+
+
+    openthepopupthatdisplaystheresults(){
+      this.theresultspopupisopen = true;
+      this.fetchResults();
+    },
+
+    fetchResults() {
+      const currentemail = localStorage.getItem('Currentemail');
+      console.log(currentemail);
+      axios.get(`/results/${currentemail}`)
+        .then(response => {
+          console.log(response.data);
+          this.grades = response.data.data;
+          console.log(this.grades);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+
+
+
+
+
+
+   
+    
+
 
 
     //submission handler
@@ -842,6 +968,78 @@ new Vue({
       this.showEditActivityPopup = true;
 
     },
+
+
+    async submitGrades() {
+      try {
+        console.log(
+          this.Activity_ID,
+          this.studentEmail,
+          this.grade,
+          this.feedback
+        )
+        // Make a POST request to your API endpoint
+        const response = await axios.post(`/activity/addGrades/${this.Activity_ID}`, {
+
+          Activity_ID: this.Activity_ID,
+          studentEmail: this.studentEmail,
+          grade: this.grade,
+          feedback: this.feedback
+        });
+
+        openGradesPopup = false;
+
+        // Handle the response as needed (show a success message, etc.)
+        console.log('Grades added successfully', response.data);
+      } catch (error) {
+        // Handle errors (show an error message, log the error, etc.)
+        console.error('Error adding grades:', error);
+      }
+    },
+
+
+
+
+    fetchGradesPerActivity(activity) {
+      this.openGradesBoardPopUp = true;
+      this.activityId = activity.Activity_ID;
+      console.log(this.activityId);
+      axios.get(`/activity/fetchGradesPerActivity/${this.activityId}`)
+        .then(response => {
+          console.log(response.data);
+          this.grades = response.data.data;
+          console.log(this.grades);
+        }
+        ).catch(error => {
+          console.error(error);
+        }
+        );
+    },
+
+    EditGradesForm() {
+      this.ShowEditGradesForm = true;
+
+    },
+
+
+
+    EditGrades() {
+      axios.put(`/activity/EditGradePerStudentForActivity/${this.Activity_ID}`, {
+        Activity_ID: this.Activity_ID,
+        studentEmail: this.studentEmail,
+        grade: this.grade,
+        feedback: this.feedback
+      }).then(response => {
+        console.log(response.data);
+        this.ShowEditGradesForm = false;
+        this.openGradesBoardPopUp = false;
+      }
+      ).catch(error => {
+        console.error(error);
+      }
+      );
+    },
+
 
 
     submitEditActivityForm() {
@@ -927,6 +1125,28 @@ new Vue({
 
     },
 
+    addGradesForSubmission(
+      Activity_ID,
+      studentEmail,
+      grade,
+      feedback
+    ) {
+
+      this.openGradesPopup = true;
+      this.Activity_ID = Activity_ID;
+      this.studentEmail = studentEmail;
+      this.grade = grade;
+      this.feedback = feedback;
+
+
+
+
+    },
+
+
+
+
+
 
     getSubmissionsByActivity(Activity_ID) {
       axios.get(`/uploads/getSubmissionsByActivity/${Activity_ID}`)
@@ -952,6 +1172,12 @@ new Vue({
 
     },
 
+    onFileChangeCreateActivity(event) {
+      console.log(event.target.files[0]);
+      this.activityFile = event.target.files[0];
+      console.log('Selected file:', this.activityFile); // Log the selected file to verify
+    },
+
 
     getAllSubmissions() {
       axios.get('/uploads/getAllSubmissions')
@@ -973,7 +1199,7 @@ new Vue({
     submitCreateSubjectForm() {
       axios.post('/subject/createSubject', this.subject)
         .then(response => {
-         alert(response.data.message);
+          alert(response.data.message);
           if (response.data.status) {
             window.location.href = '/admin/manage-subjects.html';
           }
@@ -1215,14 +1441,14 @@ new Vue({
       const endpointURL = '/class/';
       var selectElement = document.getElementById("mySelect");
       const selectsubject = document.getElementById('selectedsubject');
-        var selectedValue = selectElement.value;
-        selectsubject.disabled = false;
-        console.log(selectedValue);
-    
-        // Create an object with a key-value pair
-        if (selectsubject.value !== '') {
-          var selectedValue2 = selectsubject.value;
-    
+      var selectedValue = selectElement.value;
+      selectsubject.disabled = false;
+      console.log(selectedValue);
+
+      // Create an object with a key-value pair
+      if (selectsubject.value !== '') {
+        var selectedValue2 = selectsubject.value;
+
         // fetch(endpointURL, {
         //   method: 'POST',
         //   headers: {
@@ -1231,16 +1457,16 @@ new Vue({
         //   body: JSON.stringify(data), // Send the object as JSON
         // })
         axios.get(`/class/${selectedValue}/${selectedValue2}`)
-        .then(response => {
-          console.log(response.data);
+          .then(response => {
+            console.log(response.data);
 
-          this.studentByClass = response.data.data;
-        })
-        .catch(error => {
-          console.error(error);
-        });
+            this.studentByClass = response.data.data;
+          })
+          .catch(error => {
+            console.error(error);
+          });
       }
-        
+
 
     },
 
@@ -1252,31 +1478,31 @@ new Vue({
         var selectedValue = selectElement.value;
         var useridrow = row.querySelector('#idvalue');
         var userid = useridrow.textContent;
-        if(selectedValue === 'present'){
+        if (selectedValue === 'present') {
           this.arrayofpresent.push(userid);
         }
       });
-    let studentByClasss = this.arrayofpresent;
+      let studentByClasss = this.arrayofpresent;
       data = {
-      nameclass: this.nameclass,
-      date: this.date,
-      sessionStart:this.sessionStart,
-      sessionEnd: this.sessionEnd,
-      subject: this.subject,
-      studentByClasss,
-    }
-    const shouldCreate = confirm("Are you sure you want to create this class?");
-  
-    if (shouldCreate) {
-      axios
-        .post('/class/createClass', data)
-        .then(response => {
-          alert(response.data.message);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
+        nameclass: this.nameclass,
+        date: this.date,
+        sessionStart: this.sessionStart,
+        sessionEnd: this.sessionEnd,
+        subject: this.subject,
+        studentByClasss,
+      }
+      const shouldCreate = confirm("Are you sure you want to create this class?");
+
+      if (shouldCreate) {
+        axios
+          .post('/class/createClass', data)
+          .then(response => {
+            alert(response.data.message);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
 
       // console.log(this.class);
       // var studentObject = {studentName: 1, studentEmail: 3, studentClass: teacherclass};
@@ -1301,29 +1527,29 @@ new Vue({
     },
 
 
-     subjectsForUser() {
-     let userName = this.userName;
-    
-    axios.get(`/subjectsForUser/${userName}`)
-    .then(response => {
-      this.userrn = response.data.data;
-      this.arrayofsubjects = this.userrn[0].selectedSubjects
-      console.log(this.userrn[0].selectedSubjects);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-     
-      
-        
-    
+    subjectsForUser() {
+      let userName = this.userName;
 
-     },
+      axios.get(`/subjectsForUser/${userName}`)
+        .then(response => {
+          this.userrn = response.data.data;
+          this.arrayofsubjects = this.userrn[0].selectedSubjects
+          console.log(this.userrn[0].selectedSubjects);
+        })
+        .catch(error => {
+          console.error(error);
+        });
 
 
 
 
-     getmyattendance(){
+
+    },
+
+
+
+
+    getmyattendance() {
       // this.subjectsForUsertwo() = this.arrayofsubjectstwo;
       // let userName = this.userName;
       // console.log(this.arrayofsubjectstwo);
@@ -1331,53 +1557,54 @@ new Vue({
 
 
       let userName = this.userName;
-     
+
       axios.get(`/subjectsForUser/${userName}`)
-      .then(response => {
-         this.userrn = response.data.data;
-         console.log(this.userrn[0].class)
-         this.arrayofsubjects = this.userrn[0].selectedSubjects
-         for (let i = 0; i < this.arrayofsubjects.length; i++) {
-          this.arrayofsubjectstwo.push(this.arrayofsubjects[i]);}
-         this.idoftheuser = this.userrn[0]._id;
-        console.log(this.arrayofsubjects);
-        console.log("kmdqkmwdkqmwdkmqwd");
-       var userid = this.userrn[0]._id;
-        axios.get(`/getmyattendance/${userid}/${this.arrayofsubjectstwo}/${this.userrn[0].class}`)
         .then(response => {
-          console.log(response.data.data);
-          console.log(response.data.dataNew);
-          this.myattendance = response.data.data;
-          console.log(this.myattendance);
-          for (let i = 0; i < this.myattendance.length; i++) {
-            
-            // if(this.myattendance[i]/response.data.dataNew[i] *100 == NaN){
-            //   valueforeach = 0;
-            // }
-            // else{
-            //   valueforeach = this.myattendance[i]/response.data.dataNew[i] *100;
-            // }
-            // this.myattendancenew.push(valueforeach);
-            let valueforeach = this.myattendance[i]/response.data.dataNew[i] *100;
-      if(valueforeach>0){
-        this.myattendancenew.push(valueforeach+"%");
-      }
-      else{
-        this.myattendancenew.push("0%");
-      }
+          this.userrn = response.data.data;
+          console.log(this.userrn[0].class)
+          this.arrayofsubjects = this.userrn[0].selectedSubjects
+          for (let i = 0; i < this.arrayofsubjects.length; i++) {
+            this.arrayofsubjectstwo.push(this.arrayofsubjects[i]);
           }
-          console.log(this.myattendancenew);
+          this.idoftheuser = this.userrn[0]._id;
+          console.log(this.arrayofsubjects);
+          console.log("kmdqkmwdkqmwdkmqwd");
+          var userid = this.userrn[0]._id;
+          axios.get(`/getmyattendance/${userid}/${this.arrayofsubjectstwo}/${this.userrn[0].class}`)
+            .then(response => {
+              console.log(response.data.data);
+              console.log(response.data.dataNew);
+              this.myattendance = response.data.data;
+              console.log(this.myattendance);
+              for (let i = 0; i < this.myattendance.length; i++) {
+
+                // if(this.myattendance[i]/response.data.dataNew[i] *100 == NaN){
+                //   valueforeach = 0;
+                // }
+                // else{
+                //   valueforeach = this.myattendance[i]/response.data.dataNew[i] *100;
+                // }
+                // this.myattendancenew.push(valueforeach);
+                let valueforeach = this.myattendance[i] / response.data.dataNew[i] * 100;
+                if (valueforeach > 0) {
+                  this.myattendancenew.push(valueforeach + "%");
+                }
+                else {
+                  this.myattendancenew.push("0%");
+                }
+              }
+              console.log(this.myattendancenew);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+
         })
         .catch(error => {
           console.error(error);
         });
 
-      })
-      .catch(error => {
-        console.error(error);
-      });
-   
-     }
+    }
 
 
   }

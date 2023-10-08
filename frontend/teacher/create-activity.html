@@ -18,10 +18,17 @@
             <div class="main-content flex-1 container mx-auto p-8 pl-20 overflow-y-auto">
                 <h1 class="text-3xl font-bold mb-6">Create Activity</h1>
                 <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <form @submit.prevent="submitCreateActivityForm">
+                    <form @submit.prevent="submitCreateActivityForm" action="/activity/createActivity" method="post"  enctype="multipart/form-data">
                         <div class="flex flex-col mb-4">
                             <label for="activityName" class="text-gray-700">Activity Name:</label>
                             <input type="text" v-model="activity.activityName" id="activityName" name="activityName" class="border border-gray-300 rounded-md p-2" required>
+                        </div>
+
+                        <div class="flex flex-col mb-4">
+                            <label for="activityFile" class="block text-gray-500 font-bold  mb-1 md:mb-0 pr-4" for="inline-full-name">Choose:</label>
+                            <input type="file" id="activityFile" name="activityFile" @change="onFileChangeCreateActivity" 
+                                :disabled="isFileInputDisabled"  class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" required>
+                            <p v-if="isFileInputDisabled">Submitted</p>
                         </div>
                           
 

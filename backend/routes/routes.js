@@ -31,7 +31,26 @@ const SubmissionUpload = multer({ storage : SubmissionStorage ,
     fileSize:  2 * 1024 * 1024 * 1024
    },
 
+});
+
+
+const ActivityStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null , path.join( "./activityUploads"))
+  },
+  filename: (req, file, cb) => {
+      cb(null , file.originalname)
+  }
+
+});
+
+
+const activityUpload = multer({ storage : ActivityStorage , 
+  limits: {
+    fileSize:  2 * 1024 * 1024 * 1024
+     },
 })
+
 
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/index.html'));
@@ -96,12 +115,17 @@ router.delete('/event/deleteEvent/:eventId', eventController.deleteEvent);
 
 //Activity route
 
-router.post('/activity/createActivity', activityController.createActivity);
+router.post('/activity/createActivity',  activityUpload.single('activityFile') , activityController.createActivity);
 router.get('/activity/getAllactivities' , activityController.getAllActivities);
 router.get('/activity/getActivitiesPerTeacher/:Currentemail', activityController.getActivitiesPerTeacher);
 router.get('/activity/getActivitiesPerClass/:studentClass', activityController.getActivitiesPerClass);
 router.put('/activity/updateActivity/:selectedActivityId', activityController.updateActivity);
 router.delete('/activity/deleteActivity/:activityId', activityController.deleteActivity);
+router.post('/activity/addGrades/:activityId', activityController.addGrades );
+router.get('/activity/fetchGradesPerActivity/:activityId', activityController.fetchGradesPerActivity);
+router.put('/activity/EditGradePerStudentForActivity/:activityId', activityController.EditGradePerStudentForActivity);
+router.get( '/activity/getGradeForActivity/:activityId/:CurrentEmail', activityController.getGradeForActivity);
+router.get('/results/:studentEmail', activityController.results);
 //router.post('/activity/updateSubmissionStatus', activityController.updateSubmissionStatus);
 
 

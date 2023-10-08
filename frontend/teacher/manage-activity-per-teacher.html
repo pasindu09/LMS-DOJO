@@ -26,11 +26,12 @@
     <div class="overflow-x-auto">
 
 
- 
+
 
       <div class="max-w-lg w-2/3 lg:ml-96 lg:max-w-full mt-4 sm:mt-4" v-for="activity in activities" :key="activity.id">
 
-        <div  class="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+        <div
+          class="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
           <div class="mb-8">
             <div class="text-gray-900 font-bold text-xl mb-2">{{ activity.activityName }}</div>
             <p class="text-gray-600">Submission Time: {{ activity.submissiontime }}</p>
@@ -38,33 +39,99 @@
             <p class="text-gray-900 leading-none">Due Date : {{ activity.dueDate }}</p>
             <p class="text-gray-600"> Activity ID: {{ activity.Activity_ID }}</p>
             <div class="flex items-center">
-            <ul>
-              <li class="text-gray-600" v-for="forclass in activity.forclasses" :key="forclass">{{forclass}}</li>
-            </ul>
+              <ul>
+                <li class="text-gray-600" v-for="forclass in activity.forclasses" :key="forclass">{{forclass}}</li>
+              </ul>
+            </div>
           </div>
-          </div>
-          
+
 
           <button class=" w-64  bg-orange-600 text-white font-bold py-1 px-4 rounded mb-2"
-          @click="viewSubmissionsForActivity(activity.Activity_ID)">View Submissions</button>
+            @click="viewSubmissionsForActivity(activity.Activity_ID)">View Submissions</button>
 
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded w-64 mb-2"
-          @click="openUpdateActivityPopup(activity)"> Edit
-        </button>
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded w-64 mb-2"
+            @click="openUpdateActivityPopup(activity)"> Edit
+          </button>
 
-        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded w-64 mb-2"
-          @click="confirmDeleteActivity(activity._id)">
-          Delete
-        </button>
-          </div>
-          
-    </div>
+          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded w-64 mb-2"
+            @click="confirmDeleteActivity(activity._id)">
+            Delete
+          </button>
 
+          <button @click="fetchGradesPerActivity(activity)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded w-64 mb-2">
+            view grades
+          </button>
+        </div>
+
+      </div>
+
+      <div v-if="openGradesBoardPopUp"  class="fixed inset-0 flex items-center justify-center  bg-white max-w-3xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
+         <button @click="openGradesBoardPopUp=false" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-2 ">Close</button>
+        <div ref="popupContainer" class="bg-white h-2 w-full">
+          <table>
+            <thead>
+              <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                <th class="py-3 px-6 text-left">Student Email</th>
+                <th class="py-3 px-6 text-left">Grade</th>
+                <th class="py-3 px-6 text-left">Feedback</th>
+                <th class="py-3 px-6 text-left">Edit</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+              <tr v-for="grade in grades" :key="grade._id" class="border-b border-gray-200 hover:bg-gray-100">
+                <td class="py-3 px-6 text-left whitespace-nowrap">{{grade.studentEmail}}</td>
+                <td class="py-3 px-6 text-left whitespace-nowrap">{{grade.grade}}</td>
+                <td class="py-3 px-6 text-left whitespace-nowrap">{{grade.feedback}}</td>
+                <td class="py-3 px-6 text-left whitespace-nowrap">
+                  <button @click="EditGradesForm(grade.studentEmail, grade.grade, grade.feedback, 
+                    grade.Activity_ID
+                  )">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  
+                  
+                </td>
+
+             
+
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+      <div v-if="ShowEditGradesForm" class="fixed inset-0 flex items-center justify-center bg-white max-w-3xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
+        <div ref="popupContainer" class="bg-white h-2 w-full">
+          <button @click="ShowEditGradesForm=false"> Close </button>
+          <h1>Edit grade</h1>
+          <form @submit.prevent="EditGrades">
+            <label for="Activity_ID">Activity ID:</label>
+            <input v-model="Activity_ID" type="text" id="Activity_ID" class="border border-gray-300 rounded-md p-2" 
+             required><br>
+            
+            <label for="studentEmail">Student Email:</label>
+            <input v-model="studentEmail" type="email" id="studentEmail" class="border border-gray-300 rounded-md p-2" 
+             required><br>
+      
+            <label for="grade">Grade:</label>
+            <input v-model="grade" type="number" id="grade" class="border border-gray-300 rounded-md p-2" required><br>
+      
+            <label for="feedback">Feedback:</label>
+            <input v-model="feedback" type="text" id="feedback" class="border border-gray-300 rounded-md p-2"><br>
+      
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit Grades</button>
+      
+          </form>
+        </div>
+      </div>
+      
 
 
       <!-- Edit Activity Popup -->
 
-      <div v-if="showEditActivityPopup" class="fixed inset-0 flex items-center justify-center  bg-white max-w-3xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
+      <div v-if="showEditActivityPopup"
+        class="fixed inset-0 flex items-center justify-center  bg-white max-w-3xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
         <div ref="popupContainer" class="bg-white h-2 w-full">
           <div class="popup-content">
             <h2 class="text-xl font-bold mb-4">Edit Activity</h2>
@@ -146,48 +213,89 @@
 
 
 
-    <div v-if="showSubmissionsPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" >
+    <div v-if="showSubmissionsPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div ref="popupContainer" class="bg-white max-w-3xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
         <div class="popup-content">
           <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-2"
-          @click="showSubmissionsPopup = false">Close
-        </button>
-  
-      <table  class="w-full table-auto table-auto">
-      <thead>
-        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-          <th class="py-3 px-6 text-left">Student Email</th>
-          <th class="py-3 px-6 text-left">Submission Name</th>
-          <th class="py-3 px-6 text-left">Submission File</th>
-          <th class="py-3 px-6 text-left">Delete</th>
-        </tr>
-      </thead>
-      <tbody class="text-gray-600 text-sm font-light">
-        <tr v-for="submission in submissions" :key="submission._id" class="border-b border-gray-200 hover:bg-gray-100">
-          <td class="py-3 px-6 text-left whitespace-nowrap">{{submission.studentEmail}}</td>
-          <td class="py-3 px-6 text-left whitespace-nowrap">{{submission.submissionName}}</td>
-          <td class="py-3 px-6 text-left whitespace-nowrap">{{submission.submissionFile}}</td>
+            @click="showSubmissionsPopup = false">Close
+          </button>
 
-          <td><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" @click="confirmDeleteSubmission(submission._id)">
-            Delete
-          </button></td>
-          <td>
-            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" @click="downloadFile(submission.submissionFile)">Download</button>
+          <table class="w-full table-auto table-auto">
+            <thead>
+              <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                <th class="py-3 px-6 text-left">Student Email</th>
+                <th class="py-3 px-6 text-left">Submission Name</th>
+                <th class="py-3 px-6 text-left">Submission File</th>
+                <th class="py-3 px-6 text-left">Delete</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+              <tr v-for="submission in submissions" :key="submission._id"
+                class="border-b border-gray-200 hover:bg-gray-100">
+                <td class="py-3 px-6 text-left whitespace-nowrap">{{submission.studentEmail}}</td>
+                <td class="py-3 px-6 text-left whitespace-nowrap">{{submission.submissionName}}</td>
+                <td class="py-3 px-6 text-left whitespace-nowrap">{{submission.submissionFile}}</td>
 
-          </td>
-        </tr>
-      </tbody>
-</table>
-</div>
+                <td>
+                  <button @click="addGradesForSubmission( 
+                    submission.Activity_ID, submission.studentEmail)">
+                    Add grades
+                  </button>
+                </td>
+                
+
+                <td><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                    @click="confirmDeleteSubmission(submission._id)">
+                    Delete
+                  </button></td>
+                <td>
+                  <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                    @click="downloadFile(submission.submissionFile)">Download</button>
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
 
 
+    <!-- add grades popup-->
+
+    <!-- Add grades popup -->
+    <div v-if="openGradesPopup"
+      class="fixed inset-0 flex items-center justify-center bg-white max-w-3xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
+      <div ref="popupContainer" class="bg-white max-w-lg mx-auto rounded shadow-lg p-6">
+        <div class="popup-content">
+          <h1 class="text-lg font-bold mb-4">Add grades</h1>
+          <form action="" @submit.prevent="submitGrades">
+            <label for="Activity_ID">Activity ID:</label>
+            <input v-model="Activity_ID" type="text" id="Activity_ID" class="border border-gray-300 rounded-md p-2"
+              readonly required><br>
+
+            <label for="studentEmail">Student Email:</label>
+            <input v-model="studentEmail" type="email" id="studentEmail" class="border border-gray-300 rounded-md p-2"
+              readonly required><br>
+
+            <label for="grade">Grade:</label>
+            <input v-model="grade" type="number" id="grade" class="border border-gray-300 rounded-md p-2" required><br>
+
+            <label for="feedback">Feedback:</label>
+            <input v-model="feedback" type="text" id="feedback" class="border border-gray-300 rounded-md p-2"><br>
+
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add
+              Grades</button>
+          </form>
+        </div>
+      </div>
+    </div>
 
 
 
 
   </div>
-</div>
-</div>
 
 
 

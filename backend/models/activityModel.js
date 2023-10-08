@@ -15,6 +15,12 @@ const activitySchema = new mongoose.Schema({
        
     },
 
+    activityFile: {
+        type: String,
+        required: true,
+       
+    },
+
     dueDate: {
         type: Date,
         required: true,
@@ -55,10 +61,10 @@ const activitySchema = new mongoose.Schema({
         default: 0,
     },
 
-    feedback:{
-        type: String,
+    // feedback:{
+    //     type: String,
         
-    },
+    // },
 
     createdBy:{
         type:String,
@@ -77,6 +83,27 @@ const activitySchema = new mongoose.Schema({
         ref: 'Submission',
         
     },
+
+    grades: [
+        {
+            studentEmail: {
+                type: String,
+                required: true,
+            },
+            grade: {
+                type: Number,
+                default: 0,
+            },
+            feedback: {
+                type: String,
+            },
+        },
+    ],
+
+  
+
+
+
 
 
 
