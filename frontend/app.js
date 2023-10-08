@@ -301,7 +301,7 @@ new Vue({
   },
 
   mounted() {
-  // this.getStudentUsers();
+   this.getStudentUsers();
     this.getAdminUsers();
      this.getTeacherUsers();
     this.getAllSubjects();
@@ -325,7 +325,7 @@ new Vue({
     this.getAllTimetables();
     this.loadClassName();
     this.subjectsForUser();
-    //  this.getmyattendance();
+    this.getmyattendance();
   },
 
   computed: {
