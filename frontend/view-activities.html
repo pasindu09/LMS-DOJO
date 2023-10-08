@@ -14,7 +14,7 @@
 
 z
 <header>
-  <div class="flex border-b border-black h-4/5">
+  <div class="flex border-b border-black h-4/5 ">
     <div class="flex w-3/5 p-4 items-center">
       <ul class="text-sm flex-grow ml-12 font-bold "><a href="#">
           <span class="border-b-4 border-orange-500">Dashboard</span></a>
@@ -43,7 +43,7 @@ z
 
   <div id="app">
 
-    <div class="overflow-x-auto">
+    <div class="">
 
      
       <button @click="openthepopupthatdisplaystheresults">
@@ -61,47 +61,48 @@ z
    
 
 
-      <div v-for="activity in activities" :key="activity.id">
+      <div v-for="activity in activities" :key="activity.id" class=" border-b mb-2 mt-4 rounded pl-8  bg-red-300 w-full" id="acivities-container">
 
         
 
-        <div class=" w-full lg:h-52 ">
-          <div id="activity-box"
-            class=" lg:h-auto lg:w-60 mt-4  bg-cover lg:rounded-t-none lg:rounded-l text-center overflow-hidden bg-white">
-          </div>
-          <div
-            class="ml-2  mr-2 border-r border-b border-l border-orange-400  lg:border-t lg:border-orange-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+        <div class="bg-white gap-4 ">
+        
+         
+
+
+
             <div class="mb-1">
 
-              <div class="text-gray-900 font-bold text-xl mb-2">{{ activity.activityName }}</div>
-              <p class="text-gray-700 text-base">{{ activity.activityDescription }}</p>
+              <div class="text-gray-900 font-bold text-xl m-4">{{ activity.activityName }}</div>
+              <p class="text-gray-700 text-base m-4">{{ activity.activityDescription }}</p>
               <a :href="'add-Submission.html?Activity_ID='+  activity.Activity_ID"
-                @click="storeActivityID(activity.Activity_ID)" class="text-red-600"> Click here to submit{{
+                @click="storeActivityID(activity.Activity_ID)" class="text-red-600 m-4"> Click here to submit{{
                 activity.submissionLink }}</a>
 
             </div>
+
            <div>
             {{activity.activityFile}}
            </div>
+
+
+
             <div class="flex items-center">
-              <div class="text-sm">
-                <p class="text-gray-900 leading-none">{{ activity.createdBy }}</p>
-                <p class="text-gray-600">{{activity.dueDate}}</p>
+              <div class="text-sm m-4">
+                <p class="text-gray-900 leading-none m-4">{{ activity.createdBy }}</p>
+                <p class="text-gray-600 m-4">{{activity.dueDate}}</p>
               </div>
             </div>
+
+
+           
             <div>
-
-            </div>
-
-            <td>
               <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
                 @click="downloadLearningMaterial(activity.activityFile)">Download</button>
 
-            </td>
+            </div>
           
 
-          </div>
-         
 
         </div>
       </div>
@@ -111,7 +112,7 @@ z
 
 
   </div>
-  </div>
+
 
 
 

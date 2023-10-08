@@ -32,7 +32,7 @@ const createActivity = async (req, res) => {
                 activityDescription: req.body.activityDescription,
                 dueDate: req.body.dueDate,
                 submissiontime: req.body.submissiontime,
-                activityFile: req.file.filename,
+                activityFile: fileName,
                 forclasses: req.body.forclasses,
                 submissionLink: req.body.submissionLink,
                 downloadLink: req.body.downloadLink,
