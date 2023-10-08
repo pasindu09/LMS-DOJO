@@ -55,10 +55,6 @@ module.exports.getAllEvents = () => {
     return new Promise(function (resolve, reject) {
       const eventDate = new Date(eventDetails.eventDate);
   
-      const currentDate = new Date();
-      if (eventDate < currentDate) {
-        return reject('Event date cannot be in the past');
-      }
   
       Event.findOneAndUpdate(
         { _id: new ObjectId(selectedEventId) }, // Find event by _id

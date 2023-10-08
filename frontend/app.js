@@ -1349,16 +1349,12 @@ new Vue({
     },
 
 
-
-
-
     onEditFileChange(event) {
       const fileInput = event.target;
       if (fileInput.files.length > 0) {
-        this.editedEvent.eventImage = fileInput.files[0].name;
+        this.editedEvent.image = fileInput.files[0].name;
       }
     },
-
 
 
     submitEditEventForm() {
@@ -1368,9 +1364,9 @@ new Vue({
       formData.append('eventTime', this.editedEvent.time);
       formData.append('eventDescription', this.editedEvent.description);
       formData.append('eventLocation', this.editedEvent.location);
-      formData.append('eventImage', this.editedEvent.image); // Make sure this contains the selected file
+      formData.append('eventImage', this.editedEvent.image);
 
-
+    
       axios.put(`/event/updateEvent/${this.editedEvent.selectedEventId}`, formData)
         .then((response) => {
           this.showEditEventPopup = false;
@@ -1380,6 +1376,7 @@ new Vue({
           console.error('Error updating event:', error);
         });
     },
+    
 
 
 
