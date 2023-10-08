@@ -137,6 +137,7 @@ app.get('/downloadLearningMaterial', (req, res) => {
     const filename = req.query.filename;    
     const filePath = path.join(__dirname, 'activityUploads', filename);
     console.log(filePath);
+    
     // Determine the appropriate content type based on the file extension
     let contentType = 'application/octet-stream'; // Default content type
     if( filename.endsWith('.pdf')){

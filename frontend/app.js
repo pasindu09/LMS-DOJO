@@ -394,11 +394,13 @@ new Vue({
 
     async downloadLearningMaterial(filename) {
      try {
+      
       const encodedFilename = encodeURIComponent(filename);
       const response = await axios.get(`/downloadLearningMaterial?filename=${encodedFilename}`, {
         responseType: 'blob',
       });
 
+      console.log(response.data);
       const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
       const downloadLink = document.createElement('a');
