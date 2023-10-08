@@ -52,11 +52,15 @@ const updateEvent = async (req, res) => {
       eventTime: req.body.eventTime,
       eventDescription: req.body.eventDescription,
       eventLocation: req.body.eventLocation,
-      eventImage: req.file.filename,
     };
 
+    // Check if a file is uploaded
+    if (req.file) {
+      eventData.eventImage = req.file.filename;
+    }
+
     const updatedEvent = await eventService.updateEvent(req.params.selectedEventId, eventData);
-    console.log(updatedEvent)
+
     if (updatedEvent) {
       return res.status(200).json({ message: 'Event updated successfully', updatedEvent });
     } else {
@@ -68,6 +72,7 @@ const updateEvent = async (req, res) => {
     return res.status(500).json({ message: 'An error occurred while updating the event' });
   }
 };
+
 
 const deleteEvent = async (req, res) => {
   try {
