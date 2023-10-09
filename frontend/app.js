@@ -108,6 +108,8 @@ new Vue({
   data() {
     return {
       myattendancenew: [],
+      chartvalue1: [],
+      chartvalue2: [],
       idoftheuser: '',
       arrayofsubjectstwo: [],
       arrayofpresent: [],
@@ -175,10 +177,10 @@ new Vue({
       grades: [],
       theresultspopupisopen: false,
       results: null,
-    
 
-    
-    
+
+
+
 
 
 
@@ -222,7 +224,7 @@ new Vue({
         Activity_ID: '',
         submissionStatus: '',
         ActivityselectedSubjects: [],
-        activityFile: '' 
+        activityFile: ''
 
 
 
@@ -301,12 +303,12 @@ new Vue({
   },
 
   mounted() {
-   this.getStudentUsers();
+    this.getStudentUsers();
     this.getAdminUsers();
-     this.getTeacherUsers();
+    this.getTeacherUsers();
     this.getAllSubjects();
-     this.getAllEvents();
-     this.getAllClasses();
+    this.getAllEvents();
+    this.getAllClasses();
     this.getActivitiesPerClass();
 
     //do not uncomment  this.getAllActivities();
@@ -315,9 +317,138 @@ new Vue({
     this.getActivitiesPerTeacher();
 
     this.getAllSubmissions();
+    this.getStudentUsersfiltered2().then(() => {
+      console.log("Fetched Data:", this.chartvalue2);
+      if (document.getElementById("pie-chart2") && typeof ApexCharts !== 'undefined') {
+        const chart = new ApexCharts(document.getElementById("pie-chart2"), {
+          series: this.chartvalue2,
+          colors: ['#FF5733', '#33FF57', '#5733FF', '#FF33F6', '#F6FF33', '#33F6FF', '#FF3357', '#57FF33', '#3357FF', '#FF5733', '#33FF57', '#5733FF', '#FF33F6', '#F6FF33', '#33F6FF', '#FF3357', '#57FF33', '#3357FF', '#FF5733', '#33FF57', '#5733FF', '#FF33F6', '#F6FF33', '#33F6FF', '#FF3357', '#57FF33', '#3357FF', '#FF5733', '#33FF57', '#5733FF', '#FF33F6', '#F6FF33', '#33F6FF', '#FF3357', '#57FF33', '#3357FF'],
+          chart: {
+            height: 700,
+            width: "150%",
+            type: "pie",
+          },
+          stroke: {
+            colors: ["white"],
+            lineCap: "",
+          },
+          plotOptions: {
+            pie: {
+              labels: {
+                show: true,
+              },
+              size: "100%",
+              dataLabels: {
+                offset: -25
+              }
+            },
+          },
+          labels: ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C', '7A', '7B', '7C', '8A', '8B', '8C', '9A', '9B', '9C', '10A', '10B', '10C', '11A', '11B', '11C', '12A', '12B', '12C'],
+          dataLabels: {
+            enabled: true,
+            style: {
+              fontFamily: "Inter, sans-serif",
+            },
+          },
+          legend: {
+            position: "bottom",
+            fontFamily: "Inter, sans-serif",
+          },
+          yaxis: {
+            labels: {
+              formatter: function (value) {
+                return value + ""
+              },
+            },
+          },
+          xaxis: {
+            labels: {
+              formatter: function (value) {
+                return value + "%"
+              },
+            },
+            axisTicks: {
+              show: false,
+            },
+            axisBorder: {
+              show: false,
+            },
+          },
+        });
+        chart.render();
+      }
+    })
+      .catch(error => {
+        console.error(error);
+      });
+       
+    this.getStudentUsersfiltered().then(() => {
+      console.log("Fetched Data:", this.chartvalue1);
+      if (document.getElementById("pie-chart") && typeof ApexCharts !== 'undefined') {
+        const chart = new ApexCharts(document.getElementById("pie-chart"), {
+          series: this.chartvalue1,
+          colors: ["#1C64F2", "#16BDCA", "#9061F9"],
+          chart: {
+            height: 420,
+            width: "100%",
+            type: "pie",
+          },
+          stroke: {
+            colors: ["white"],
+            lineCap: "",
+          },
+          plotOptions: {
+            pie: {
+              labels: {
+                show: true,
+              },
+              size: "100%",
+              dataLabels: {
+                offset: -25
+              }
+            },
+          },
+          labels: ["Lower-secondary", "Upper-secondary", "Primary"],
+          dataLabels: {
+            enabled: true,
+            style: {
+              fontFamily: "Inter, sans-serif",
+            },
+          },
+          legend: {
+            position: "bottom",
+            fontFamily: "Inter, sans-serif",
+          },
+          yaxis: {
+            labels: {
+              formatter: function (value) {
+                return value + ""
+              },
+            },
+          },
+          xaxis: {
+            labels: {
+              formatter: function (value) {
+                return value + "%"
+              },
+            },
+            axisTicks: {
+              show: false,
+            },
+            axisBorder: {
+              show: false,
+            },
+          },
+        });
+        chart.render();
+      }
+    })
+      .catch(error => {
+        console.error(error);
+      });
+
 
   },
-
 
 
   created() {
@@ -326,6 +457,7 @@ new Vue({
     this.loadClassName();
     this.subjectsForUser();
     this.getmyattendance();
+
   },
 
   computed: {
@@ -393,35 +525,35 @@ new Vue({
 
 
     async downloadLearningMaterial(filename) {
-     try {
-      
-      const encodedFilename = encodeURIComponent(filename);
-      const response = await axios.get(`/downloadLearningMaterial?filename=${encodedFilename}`, {
-        responseType: 'blob',
-      });
+      try {
 
-      console.log(response.data);
-      const blob = new Blob([response.data], { type: 'application/octet-stream' });
+        const encodedFilename = encodeURIComponent(filename);
+        const response = await axios.get(`/downloadLearningMaterial?filename=${encodedFilename}`, {
+          responseType: 'blob',
+        });
 
-      const downloadLink = document.createElement('a');
-      downloadLink.href = URL.createObjectURL(blob);
+        console.log(response.data);
+        const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
-      // Decode the filename before setting it as the download attribute
-      const decodedFilename = decodeURIComponent(filename);
-      downloadLink.download = decodedFilename;
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
 
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
+        // Decode the filename before setting it as the download attribute
+        const decodedFilename = decodeURIComponent(filename);
+        downloadLink.download = decodedFilename;
 
-      URL.revokeObjectURL(downloadLink.href);
-      
-     } catch (error) {
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        URL.revokeObjectURL(downloadLink.href);
+
+      } catch (error) {
         console.error(error);
 
 
-      
-     }
+
+      }
 
 
     },
@@ -549,7 +681,7 @@ new Vue({
     getStudentUsers() {
       axios.get('/admin/getStudentUsers')
         .then(response => {
-         // console.log(response.data);
+          // console.log(response.data);
           this.studentUsers = response.data.data;
           this.studentUserCount = response.data.data.length;
         })
@@ -557,10 +689,44 @@ new Vue({
           console.error(error);
         });
     },
+    getStudentUsersfiltered() {
+      return new Promise((resolve, reject) => {
+        axios.get('/admin/getStudentUsersfiltered')
+          .then(response => {
+            this.chartvalue1 = response.data.data;
+            resolve(); // Resolve the promise
+          })
+          .catch(error => {
+            console.error(error);
+            reject(error); // Reject the promise with the error
+          });
+      });
+    },
+    getStudentUsersfiltered2() {
+      return new Promise((resolve, reject) => {
+        axios.get('/admin/getStudentUsersfiltered2')
+          .then(response => {
+            for (let i = 0; i < response.data.data.length; i++) {
+              if(response.data.data[i].documentCount > 0){
+                this.chartvalue2.push(response.data.data[i].documentCount);
+              }
+              else{
+                this.chartvalue2.push(0);
+              }
+             
+            }
+            resolve(); // Resolve the promise
+          })
+          .catch(error => {
+            console.error(error);
+            reject(error); // Reject the promise with the error
+          });
+      });
+    },
     getAdminUsers() {
       axios.get('/admin/getAdminUsers')
         .then(response => {
-         // console.log(response.data);
+          // console.log(response.data);
           this.adminUsers = response.data.data;
           this.admincount = response.data.data.length;
         })
@@ -794,8 +960,8 @@ new Vue({
       formData.append("createdBy", this.activity.createdBy);
       formData.append("Activity_ID", this.activity.Activity_ID);
       formData.append("activityFile", this.activityFile);
-     
-      axios.post('/activity/createActivity', formData ,{
+
+      axios.post('/activity/createActivity', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -886,7 +1052,7 @@ new Vue({
     },
 
 
-    openthepopupthatdisplaystheresults(){
+    openthepopupthatdisplaystheresults() {
       this.theresultspopupisopen = true;
       this.fetchResults();
     },
@@ -910,8 +1076,8 @@ new Vue({
 
 
 
-   
-    
+
+
 
 
 
@@ -988,7 +1154,7 @@ new Vue({
           grade: this.grade,
           feedback: this.feedback
         });
-          
+
         openGradesPopup = false;
 
         // Handle the response as needed (show a success message, etc.)
@@ -1366,7 +1532,7 @@ new Vue({
       formData.append('eventLocation', this.editedEvent.location);
       formData.append('eventImage', this.editedEvent.image);
 
-    
+
       axios.put(`/event/updateEvent/${this.editedEvent.selectedEventId}`, formData)
         .then((response) => {
           this.showEditEventPopup = false;
@@ -1376,7 +1542,7 @@ new Vue({
           console.error('Error updating event:', error);
         });
     },
-    
+
 
 
 

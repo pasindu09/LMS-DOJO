@@ -63,6 +63,58 @@ var getStudentUsers = async (req, res) => {
     }
 }
 
+
+const getStudentUsersfiltered = async (req, res) => {
+    try {
+        const users = await userService.getAllUsers();
+        const filteredUsers = users.filter(user => ['lsStudent'].includes(user.role));
+        const filteredUsers2 = users.filter(user => ['usStudent'].includes(user.role));
+        const filteredUsers3 = users.filter(user => ['pStudent'].includes(user.role));
+
+        const counts = [filteredUsers.length, filteredUsers2.length, filteredUsers3.length];
+
+        res.status(200).json({ status: true, data: counts });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: false, data: [] });
+    }
+};
+
+const getStudentUsersfiltered2 = async (req, res) => {
+    try {
+        const TeacherclassOptions = ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C', '7A', '7B', '7C', '8A', '8B', '8C', '9A', '9B', '9C', '10A', '10B', '10C', '11A', '11B', '11C', '12A', '12B', '12C'];
+        const users = await userService.getAllUsers();
+
+        // Initialize an array to store counts
+        const classCounts = [];
+
+        // Loop through each class option
+        for (const classOption of TeacherclassOptions) {
+            // Filter users for the current class
+            const classUsers = users.filter(user => user.class === classOption);
+
+            // Get the count of documents for this class
+            const classDocumentCount = classUsers.length;
+
+            // Get an array of roles for this class
+            const classRoles = classUsers.map(user => user.role);
+
+            // Store the information in the classCounts array
+            classCounts.push({
+                classOption,
+                documentCount: classDocumentCount,
+                roles: classRoles
+            });
+        }
+         console.log(classCounts);
+        res.status(200).json({ status: true, data: classCounts });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: false, message: "bad respond eint" });
+    }
+};
+
+
 var getAdminUsers = async (req, res) => {
     try {
       const users = await userService.getAllUsers();
@@ -175,4 +227,4 @@ var getStudentByclass = async (req, res) => {
 };
 
 
-module.exports = { login, getStudentUsers, getAdminUsers, getTeacherUsers, createUser, updateUser, deleteUser, getAllClasses , getAllSubjects , getStudentByclass};
+module.exports = { login, getStudentUsers, getStudentUsersfiltered,getStudentUsersfiltered2, getAdminUsers, getTeacherUsers, createUser, updateUser, deleteUser, getAllClasses , getAllSubjects , getStudentByclass};
