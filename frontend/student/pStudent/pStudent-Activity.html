@@ -31,16 +31,27 @@
 
                 <div class="overflow-x-auto">
 
-                    <button class="ml-6 mt-4 text-xl font-bold px-6 py-2 rounded-md border border-cyan-700 hover:bg-cyan-700 hover:text-white" @click="openthepopupthatdisplaystheresults">
+                    <button
+                        class="ml-6 mt-4 text-xl font-bold px-6 py-2 rounded-md border border-cyan-700 hover:bg-cyan-700 hover:text-white"
+                        @click="openthepopupthatdisplaystheresults">
                         View Results
                     </button>
-                    <div v-if="theresultspopupisopen">
-                        <div v-for="(grade, index) in grades" :key="index">
-                            <p>Activity Name: {{ grade.activityName }}</p>
-                            <p>Grade: {{ grade.grade }}</p>
-                            <p>Feedback: {{ grade.feedback }}</p>
-                        </div>
+                    <div v-if="theresultspopupisopen"
+                        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div ref="popupContainer"
+                            class="bg-white max-w-4xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
+                            <div v-for="(grade, index) in grades" :key="index" class="mb-6">
+                                <p class="font-bold">Activity Name: <span class="font-normal">{{ grade.activityName
+                                        }}</span></p>
+                                <p class="font-bold">Grade: <span class="font-normal">{{ grade.grade }}</span></p>
+                                <p class="font-bold">Feedback: <span class="font-normal">{{ grade.feedback }}</span></p>
+                            </div>
+                            <button @click="theresultspopupisopen=false"
+                                class="text-lg font-bold px-6 py-2 rounded-md border border-cyan-700 hover:bg-cyan-700 hover:text-white">
+                                Close
+                            </button>
 
+                        </div>
                     </div>
 
                     <div v-for="activity in activities" :key="activity.id">

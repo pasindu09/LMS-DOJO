@@ -44,7 +44,8 @@
                         style="font-size: 1.2em;text-decoration: none;">Attendance</a>
                 </ul>
                 <ul class="text-lg flex-grow font-bold">
-                    <a href="../../student/usStudent/usStudent-Event-Calendar.html" style="font-size: 1.2em;text-decoration: none;">Event Calendar</a>
+                    <a href="../../student/usStudent/usStudent-Event-Calendar.html"
+                        style="font-size: 1.2em;text-decoration: none;">Event Calendar</a>
                 </ul>
                 <ul class="text-lg flex-grow font-bold">
                     <a href="../../index.html" style="font-size: 1.2em;text-decoration: none;">Log out</a>
@@ -61,16 +62,25 @@
 
             <div class="overflow-x-auto">
 
-                <button class="ml-6 mt-4 text-xl font-bold px-6 py-2 rounded-md border border-cyan-700 hover:bg-cyan-700 hover:text-white" @click="openthepopupthatdisplaystheresults">
+                <button
+                    class="ml-6 mt-4 text-xl font-bold px-6 py-2 rounded-md border border-cyan-700 hover:bg-cyan-700 hover:text-white"
+                    @click="openthepopupthatdisplaystheresults">
                     View Results
                 </button>
-                <div v-if="theresultspopupisopen">
-                    <div v-for="(grade, index) in grades" :key="index">
-                        <p>Activity Name: {{ grade.activityName }}</p>
-                        <p>Grade: {{ grade.grade }}</p>
-                        <p>Feedback: {{ grade.feedback }}</p>
-                    </div>
+                <div v-if="theresultspopupisopen"
+                    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div ref="popupContainer" class="bg-white max-w-4xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
+                        <div v-for="(grade, index) in grades" :key="index" class="mb-6">
+                            <p class="font-bold">Activity Name: <span class="font-normal">{{ grade.activityName }}</span></p>
+                            <p class="font-bold">Grade: <span class="font-normal">{{ grade.grade }}</span></p>
+                            <p class="font-bold">Feedback: <span class="font-normal">{{ grade.feedback }}</span></p>
+                        </div>
+                            <button @click="theresultspopupisopen=false"
+                                class="text-lg font-bold px-6 py-2 rounded-md border border-cyan-700 hover:bg-cyan-700 hover:text-white">
+                                Close
+                            </button>
 
+                    </div>
                 </div>
 
                 <div v-for="activity in activities" :key="activity.id">
@@ -82,34 +92,35 @@
                             class=" lg:h-auto lg:w-60 mt-4  bg-cover lg:rounded-t-none lg:rounded-l text-center overflow-hidden bg-white">
                         </div>
                         <div
-                            class="ml-2  mr-2 border-r border-b border-l border-orange-400  lg:border-t lg:border-orange-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+                            class="ml-2  mr-2 border-r border-b border-l  lg:border-t  bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
                             <div class="mb-1">
 
                                 <div class="text-gray-900 font-bold text-xl mb-2">{{ activity.activityName }}</div>
-                                <p class="text-gray-700 text-base">{{ activity.activityDescription }}</p>
+                                <p class="text-gray-700 text-base">Description :{{ activity.activityDescription }}</p>
                                 <a :href="'../../add-Submission.html?Activity_ID='+  activity.Activity_ID"
                                     @click="storeActivityID(activity.Activity_ID)" class="text-red-600"> Click here
                                     to submit{{
                                     activity.submissionLink }}</a>
 
-                            </div>
-                            <div>
-                                {{activity.activityFile}}
-                            </div>
+                            </div> 
+                           
                             <div class="flex items-center">
                                 <div class="text-sm">
-                                    <p class="text-gray-900 leading-none">{{ activity.createdBy }}</p>
-                                    <p class="text-gray-600">{{activity.dueDate}}</p>
+                                    <p class="text-gray-900 leading-none">Created By: {{ activity.createdBy }}</p>
+                                    <p class="text-gray-600">Due date: {{ formatDate(activity.dueDate) }}</p>
                                 </div>
                             </div>
                             <div>
 
                             </div>
+                            <div>
+                                {{activity.activityFile}}
+                            </div>
 
-                            <td>
-                                <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                            <div>
+                                <button class="bg-cyan-600 hover:bg-cyan-800 text-white font-bold py-1 px-2 rounded w-56"
                                     @click="downloadLearningMaterial(activity.activityFile)">Download</button>
-                            </td>
+                            </div>
                         </div>
                     </div>
                 </div>

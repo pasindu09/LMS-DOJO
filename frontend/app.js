@@ -175,9 +175,9 @@ new Vue({
       grades: [],
       theresultspopupisopen: false,
       results: null,
-    
 
-    
+
+
 
       classOptions: ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C', '7A', '7B', '7C', '8A', '8B', '8C', '9A', '9B', '9C', '10A', '10B', '10C', '11A', '11B', '11C', '12A', '12B', '12C'],
       user: {
@@ -219,7 +219,7 @@ new Vue({
         Activity_ID: '',
         submissionStatus: '',
         ActivityselectedSubjects: [],
-        activityFile: '' 
+        activityFile: ''
 
 
 
@@ -298,12 +298,12 @@ new Vue({
   },
 
   mounted() {
-   this.getStudentUsers();
+    this.getStudentUsers();
     this.getAdminUsers();
-     this.getTeacherUsers();
+    this.getTeacherUsers();
     this.getAllSubjects();
-     this.getAllEvents();
-     this.getAllClasses();
+    this.getAllEvents();
+    this.getAllClasses();
     this.getActivitiesPerClass();
 
     //do not uncomment  this.getAllActivities();
@@ -383,19 +383,19 @@ new Vue({
     totalStudents() {
       return this.studentUserCount;
     },
-  
+
     // Computed property for Total Activities
     totalActivities() {
       return this.activities.length;
     },
-  
+
     // Computed property for Average Quiz Score
     averageQuizScore() {
       const quizScores = this.grades.map(grade => grade.grade);
       const totalScore = quizScores.reduce((total, score) => total + score, 0);
       return totalScore / quizScores.length;
     },
-  
+
     // Computed property for Pending Submissions
     pendingSubmissions() {
       return this.submissions.filter(submission => submission.submissionStatus === 'Pending').length;
@@ -412,35 +412,35 @@ new Vue({
 
 
     async downloadLearningMaterial(filename) {
-     try {
-      
-      const encodedFilename = encodeURIComponent(filename);
-      const response = await axios.get(`/downloadLearningMaterial?filename=${encodedFilename}`, {
-        responseType: 'blob',
-      });
+      try {
 
-      console.log(response.data);
-      const blob = new Blob([response.data], { type: 'application/octet-stream' });
+        const encodedFilename = encodeURIComponent(filename);
+        const response = await axios.get(`/downloadLearningMaterial?filename=${encodedFilename}`, {
+          responseType: 'blob',
+        });
 
-      const downloadLink = document.createElement('a');
-      downloadLink.href = URL.createObjectURL(blob);
+        console.log(response.data);
+        const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
-      // Decode the filename before setting it as the download attribute
-      const decodedFilename = decodeURIComponent(filename);
-      downloadLink.download = decodedFilename;
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
 
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
+        // Decode the filename before setting it as the download attribute
+        const decodedFilename = decodeURIComponent(filename);
+        downloadLink.download = decodedFilename;
 
-      URL.revokeObjectURL(downloadLink.href);
-      
-     } catch (error) {
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        URL.revokeObjectURL(downloadLink.href);
+
+      } catch (error) {
         console.error(error);
 
 
-      
-     }
+
+      }
 
 
     },
@@ -568,7 +568,7 @@ new Vue({
     getStudentUsers() {
       axios.get('/admin/getStudentUsers')
         .then(response => {
-         // console.log(response.data);
+          // console.log(response.data);
           this.studentUsers = response.data.data;
           this.studentUserCount = response.data.data.length;
         })
@@ -579,7 +579,7 @@ new Vue({
     getAdminUsers() {
       axios.get('/admin/getAdminUsers')
         .then(response => {
-         // console.log(response.data);
+          // console.log(response.data);
           this.adminUsers = response.data.data;
           this.admincount = response.data.data.length;
         })
@@ -813,8 +813,8 @@ new Vue({
       formData.append("createdBy", this.activity.createdBy);
       formData.append("Activity_ID", this.activity.Activity_ID);
       formData.append("activityFile", this.activityFile);
-     
-      axios.post('/activity/createActivity', formData ,{
+
+      axios.post('/activity/createActivity', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -905,7 +905,7 @@ new Vue({
     },
 
 
-    openthepopupthatdisplaystheresults(){
+    openthepopupthatdisplaystheresults() {
       this.theresultspopupisopen = true;
       this.fetchResults();
     },
@@ -929,8 +929,8 @@ new Vue({
 
 
 
-   
-    
+
+
 
 
 
@@ -1007,7 +1007,7 @@ new Vue({
           grade: this.grade,
           feedback: this.feedback
         });
-          
+
         openGradesPopup = false;
 
         // Handle the response as needed (show a success message, etc.)
@@ -1095,6 +1095,26 @@ new Vue({
         this.deleteActivity(activityId);
       }
 
+    },
+
+
+
+
+    // Function to get a random image path
+    getRandomImagePath() {
+      const imagePaths = [
+        '../../assets/images/subject1.jpg',
+        '../../assets/images/subject2.jpg',
+        '../../assets/images/subject3.jpg',
+        '../../assets/images/subject4.jpg',
+        '../../assets/images/subject5.jpg',
+        '../../assets/images/subject6.jpg',
+        '../../assets/images/subject7.jpg',
+        '../../assets/images/subject8.jpg',
+        
+      ];
+      const randomIndex = Math.floor(Math.random() * imagePaths.length);
+      return imagePaths[randomIndex];
     },
 
 
@@ -1385,7 +1405,7 @@ new Vue({
       formData.append('eventLocation', this.editedEvent.location);
       formData.append('eventImage', this.editedEvent.image);
 
-    
+
       axios.put(`/event/updateEvent/${this.editedEvent.selectedEventId}`, formData)
         .then((response) => {
           this.showEditEventPopup = false;
@@ -1395,7 +1415,7 @@ new Vue({
           console.error('Error updating event:', error);
         });
     },
-    
+
 
 
 

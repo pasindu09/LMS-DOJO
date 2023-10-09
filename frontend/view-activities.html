@@ -51,14 +51,21 @@
         view results
       </button>
 
-      <div v-if="theresultspopupisopen">
-        <div v-for="(grade, index) in grades" :key="index">
-          <p>Activity Name: {{ grade.activityName }}</p>
-          <p>Grade: {{ grade.grade }}</p>
-          <p>Feedback: {{ grade.feedback }}</p>
-        </div>
+      <div v-if="theresultspopupisopen"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div ref="popupContainer" class="bg-white max-w-4xl mx-auto rounded shadow-lg p-6 overflow-y-auto">
+          <div v-for="(grade, index) in grades" :key="index" class="mb-6">
+              <p class="font-bold">Activity Name: <span class="font-normal">{{ grade.activityName }}</span></p>
+              <p class="font-bold">Grade: <span class="font-normal">{{ grade.grade }}</span></p>
+              <p class="font-bold">Feedback: <span class="font-normal">{{ grade.feedback }}</span></p>
+          </div>
+              <button @click="theresultspopupisopen=false"
+                  class="text-lg font-bold px-6 py-2 rounded-md border border-cyan-700 hover:bg-cyan-700 hover:text-white">
+                  Close
+              </button>
 
       </div>
+  </div>
 
 
 
@@ -71,7 +78,7 @@
             class=" lg:h-auto lg:w-60 mt-4  bg-cover lg:rounded-t-none lg:rounded-l text-center overflow-hidden bg-white">
           </div>
           <div
-            class="ml-2  mr-2 border-r border-b border-l border-orange-400  lg:border-t lg:border-orange-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+            class="ml-2  mr-2 border-r border-b border-l lg:border-t  bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
             <div class="mb-1">
 
               <div class="text-gray-900 font-bold text-xl m-4">{{ activity.activityName }}</div>
@@ -87,7 +94,7 @@
             <div class="flex items-center">
               <div class="text-sm m-4">
                 <p class="text-gray-900 leading-none m-4">{{ activity.createdBy }}</p>
-                <p class="text-gray-600 m-4">{{activity.dueDate}}</p>
+                <p class="text-gray-600 m-4">{{ formatDate(activity.dueDate) }}</p>
               </div>
             </div>
 

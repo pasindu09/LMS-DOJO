@@ -55,14 +55,16 @@
     </div>
 
     <div class="flex flex-wrap justify-center mx-4 my-8 bg-white">
-      <div v-for="subject in arrayofsubjects"
+      <div v-for="subject in arrayofsubjects" :key="subject"
         class="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-white border border-gray-300 shadow-xl hover:shadow-2xl transition duration-300 ease-in-out m-4 rounded-md">
-        <img src="../../assets/images/physic.jpg" alt="Cover Image" class="object-cover w-full h-full rounded-md">
+        <!-- Use the getRandomImagePath() function to set the background image -->
+        <img :src="getRandomImagePath()" alt="Cover Image" class="object-cover w-full h-full rounded-md brightness-50">
         <div class="absolute inset-0 flex items-center justify-center">
-          <p class="text-center bg-orange-500 text-xl font-medium text-white p-2 rounded">{{subject}}</p>
+          <p class="text-center text-3xl font-medium text-white p-2 rounded">{{ subject }}</p>
         </div>
       </div>
     </div>
+    
 
   </div>
 
