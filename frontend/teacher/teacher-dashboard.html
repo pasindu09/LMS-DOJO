@@ -6,13 +6,11 @@
   <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <title>LMS DOJO HOME</title>
 </head>
 
 <body>
-
   <div id="app" class="flex h-screen">
     <aside id="sidepanel" class="w-64 bg-black text-white max-md:w-0">
       <sidebar></sidebar>
@@ -26,68 +24,73 @@
           <div class="text-right">
             <p class="text-lg font-bold mb-2 text-[#FF823C] max-md:text-sm">WELCOME BACK!</p>
             <p><span id="userName" class="font-semibold text-2xl max-md:text-xl">{{ userName }}</span></p>
+          </div>
+        </div>
+        <div class="bg-white p-8 rounded-lg shadow-md mt-8">
+          <h2 class="text-2xl font-bold mb-4">Analytics</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-blue-100 border-l-4 border-blue-500 p-4 rounded-lg shadow-md">
+              <h3 class="text-xl font-semibold mb-2">Total Students</h3>
+              <p class="text-gray-700 text-lg">{{ totalStudents }}</p>
+            </div>
 
+            <div class="bg-green-100 border-l-4 border-green-500 p-4 rounded-lg shadow-md">
+              <h3 class="text-xl font-semibold mb-2">Total Activities</h3>
+              <p class="text-gray-700 text-lg">{{ totalActivities }}</p>
+            </div>
+
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg shadow-md">
+              <h3 class="text-xl font-semibold mb-2">Average Quiz Score</h3>
+              <p class="text-gray-700 text-lg">{{ averageQuizScore }}</p>
+            </div>
+
+            <div class="bg-red-100 border-l-4 border-red-500 p-4 rounded-lg shadow-md">
+              <h3 class="text-xl font-semibold mb-2">Pending Submissions</h3>
+              <p class="text-gray-700 text-lg">{{ pendingSubmissions }}</p>
+            </div>
 
           </div>
         </div>
 
+        <div class="flex">
 
+          <div class="my-8 flex-1">
+            <h2 class="text-2xl font-bold mb-4">My Classes</h2>
+            <ul v-for="teacherclass in teacherclasses" :key="teacherclass">
+              <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                <div class="px-6 py-4">
+                  <li class="font-bold text-xl mb-2">{{ teacherclass }}</li>
+                </div>
+              </div>
+            </ul>
+          </div>
 
-
-
-        <ul v-for="teacherclass in teacherclasses" :key="teacherclass">
-          <div class="max-w-sm rounded overflow-hidden shadow-lg">
-            <div class="px-6 py-4">
-
-              <li class="font-bold text-xl mb-2">{{ teacherclass }}</li>
+          <div class="my-8 flex-1">
+            <h2 class="text-2xl font-bold mb-4">Teacher Tools</h2>
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+              <div class="px-6 py-4">
+                <a href="./create-activity.html" class="font-bold text-xl mb-2">Create an activity</a>
+              </div>
+            </div>
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+              <div class="px-6 py-4">
+                <a href="./manage-activity-per-teacher.html" class="font-bold text-xl mb-2">View activities</a>
+              </div>
+            </div>
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+              <div class="px-6 py-4">
+                <a href="./manage-submissions.html" class="font-bold text-xl mb-2">Manage submissions</a>
+              </div>
+            </div>
+            <div class="max-w-sm rounded overflow-hidden shadow-lg">
+              <div class="px-6 py-4">
+                <a href="./create-pop-quiz.html" class="font-bold text-xl mb-2">Create Quiz</a>
+              </div>
             </div>
           </div>
-        </ul>
+        </div>
+      </main>
     </div>
-
-
-
-
-
-    <div class="max-w-sm rounded overflow-hidden shadow-lg">
-     <!----<div class="px-6 py-4">
-        <a href="./create-activity.html" class="font-bold text-xl mb-2">Create an activity</a>
-      </div>-->
-      <!---<div class="px-6 py-4">
-                <a href="./manage-activities.html" class="font-bold text-xl mb-2">view all activities</a>
-              </div>-->
-
-      <!--<div class="px-6 py-4">
-        <a href="./manage-activity-per-teacher.html" class="font-bold text-xl mb-2">view just my activities
-          activities</a>
-      </div>-->
-
-      <!--<div class="px-6 py-4">
-        <a href="./manage-submissions.html" class="font-bold text-xl mb-2">Manage submissions</a>
-      </div>-->
-      <div class="px-6 pt-4 pb-2">
-      </div>
-
-
-      <div class="px-6 py-4">
-        <a href="./create-pop-quiz.html" class="font-bold text-xl mb-2">Create Quizz</a>
-      </div>
-
-      <!--<div class="px-6 py-4">
-        <a href="./play-pop-quiz.html" class="font-bold text-xl mb-2">play Quizz</a>
-      </div>-->
-     
-    </div>
-
-
-
-
-
-    </main>
-  </div>
-
-
-
   </div>
 
   <script src="../Sidebar.js"></script>
@@ -98,8 +101,6 @@
   </script>
   <script src="../app.js"></script>
   <script src="../TeacherClasses.js"></script>
-
-
 </body>
 
 </html>

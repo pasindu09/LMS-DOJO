@@ -179,8 +179,8 @@ new Vue({
       results: null,
 
 
-
-
+    
+    
 
 
 
@@ -512,7 +512,29 @@ new Vue({
 
     buttonText() {
       return this.hasGrade ? 'Edit marks' : 'Add grades';
-    }
+    },
+
+
+    totalStudents() {
+      return this.studentUserCount;
+    },
+  
+    // Computed property for Total Activities
+    totalActivities() {
+      return this.activities.length;
+    },
+  
+    // Computed property for Average Quiz Score
+    averageQuizScore() {
+      const quizScores = this.grades.map(grade => grade.grade);
+      const totalScore = quizScores.reduce((total, score) => total + score, 0);
+      return totalScore / quizScores.length;
+    },
+  
+    // Computed property for Pending Submissions
+    pendingSubmissions() {
+      return this.submissions.filter(submission => submission.submissionStatus === 'Pending').length;
+    },
 
 
   },
@@ -1557,8 +1579,6 @@ new Vue({
           console.error(error);
         });
     },
-
-
 
 
 

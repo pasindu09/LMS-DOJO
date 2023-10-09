@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <main>
+        <div id="app" class="container mx-auto py-8">
+            <div class="bg-[#f0f0e8] py-8">
+                <div class="flex p-4 items-center">
+                    <ul class="text-sm flex-grow ml-12 font-bold space-x-8 flex">
+                        <li><a href="../../student/pStudent/pStudent-dashboard.html">Dashboard</a></li>
+                        <li><a href="../../student/pStudent/timeTable.html">Timetable</a></li>
+                        <li><a href="../../student/pStudent/pStudent-Activity.html">My Activities</a></li>
+                        <li><a href="#"><span class="border-b-4 border-orange-500">Event Calendar</span></a></li>
+                        <li><a href="../../index.html">Log out</a></li>
+                    </ul>
+                    <h1 id="studentClass" class="text-3xl font-bold mb-4 ml-auto pr-12">Class {{ studentClass }}
+                        Timetable</h1>
+                </div>
+            </div>
+
+
+            
+            <div class="bg-white shadow-md rounded-lg px-6 py-4 mt-4">
+                <h2 class="text-2xl font-semibold mb-4">Event Calendar</h2>
+            
+                <div v-if="loading">Loading events...</div>
+            
+                <div v-else>
+                    <div v-for="event in events" :key="event.id" class="shadow-lg px-6 py-4 mb-4 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-72 h-40 mr-4 overflow-hidden object-cover rounded-xl">
+                                <img :src="event.eventImage" alt="Event Image" class="w-full h-full object-cover">
+                            </div>
+                            <div class="ml-6">
+                                <h3 class="text-3xl font-semibold">{{ event.eventName }}</h3>
+                                <p class="text-gray-500 mt-2"> {{ formatDate(event.eventDate) }} | | {{ event.eventTime }} | | {{ event.eventLocation }}</p>
+                                <p class="text-gray-500 mt-4">{{ event.eventDescription }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>         
+        </div>
+    </main>
+    <script src="../../app.js"></script>
+</body>
+
+</html>

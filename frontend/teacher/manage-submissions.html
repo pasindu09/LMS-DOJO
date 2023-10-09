@@ -1,37 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Submissions List</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 </head>
+
 <body>
     <div id="app">
         <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-bold mb-4">Submissions List</h2>
-            <table class="table-auto w-full"> 
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2"> submission Name</th>
-                        <th class="px-4 py-2"> submission File</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="submission in submissions" :key="submission._id">
-                        <td class="border px-4 py-2">{{submission.submissionName}}</td>
-                        <td class="border px-4 py-2">{{submission.submissionFile}}</td>
-                    </tr>
-                </tbody>
-
-
-            </table>
+            <h2 class="text-2xl font-bold mb-4">Submissions List</h2>
+            <div class="overflow-x-auto">
+                <table class="table-auto w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 bg-gray-100 text-left">Submission Name</th>
+                            <th class="px-6 py-3 bg-gray-100 text-left">Submission File</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="submission in submissions" :key="submission._id" class="odd:bg-gray-100">
+                            <td class="border px-6 py-3">{{ submission.submissionName }}</td>
+                            <td class="border px-6 py-3">
+                                <a :href="submission.submissionFile" target="_blank"
+                                    class="text-blue-500 hover:underline">{{ submission.submissionFile }}</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <script src="../app.js"></script>
-
 </body>
+
 </html>
