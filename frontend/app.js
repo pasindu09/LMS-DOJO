@@ -108,6 +108,8 @@ new Vue({
   data() {
     return {
       myattendancenew: [],
+      chartvalue1: [],
+      chartvalue2: [],
       idoftheuser: '',
       arrayofsubjectstwo: [],
       arrayofpresent: [],
@@ -175,6 +177,9 @@ new Vue({
       grades: [],
       theresultspopupisopen: false,
       results: null,
+
+
+    
 
 
 
@@ -312,9 +317,138 @@ new Vue({
     this.getActivitiesPerTeacher();
 
     this.getAllSubmissions();
+    this.getStudentUsersfiltered2().then(() => {
+      console.log("Fetched Data:", this.chartvalue2);
+      if (document.getElementById("pie-chart2") && typeof ApexCharts !== 'undefined') {
+        const chart = new ApexCharts(document.getElementById("pie-chart2"), {
+          series: this.chartvalue2,
+          colors: ['#FF5733', '#33FF57', '#5733FF', '#FF33F6', '#F6FF33', '#33F6FF', '#FF3357', '#57FF33', '#3357FF', '#FF5733', '#33FF57', '#5733FF', '#FF33F6', '#F6FF33', '#33F6FF', '#FF3357', '#57FF33', '#3357FF', '#FF5733', '#33FF57', '#5733FF', '#FF33F6', '#F6FF33', '#33F6FF', '#FF3357', '#57FF33', '#3357FF', '#FF5733', '#33FF57', '#5733FF', '#FF33F6', '#F6FF33', '#33F6FF', '#FF3357', '#57FF33', '#3357FF'],
+          chart: {
+            height: 700,
+            width: "150%",
+            type: "pie",
+          },
+          stroke: {
+            colors: ["white"],
+            lineCap: "",
+          },
+          plotOptions: {
+            pie: {
+              labels: {
+                show: true,
+              },
+              size: "100%",
+              dataLabels: {
+                offset: -25
+              }
+            },
+          },
+          labels: ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C', '7A', '7B', '7C', '8A', '8B', '8C', '9A', '9B', '9C', '10A', '10B', '10C', '11A', '11B', '11C', '12A', '12B', '12C'],
+          dataLabels: {
+            enabled: true,
+            style: {
+              fontFamily: "Inter, sans-serif",
+            },
+          },
+          legend: {
+            position: "bottom",
+            fontFamily: "Inter, sans-serif",
+          },
+          yaxis: {
+            labels: {
+              formatter: function (value) {
+                return value + ""
+              },
+            },
+          },
+          xaxis: {
+            labels: {
+              formatter: function (value) {
+                return value + "%"
+              },
+            },
+            axisTicks: {
+              show: false,
+            },
+            axisBorder: {
+              show: false,
+            },
+          },
+        });
+        chart.render();
+      }
+    })
+      .catch(error => {
+        console.error(error);
+      });
+       
+    this.getStudentUsersfiltered().then(() => {
+      console.log("Fetched Data:", this.chartvalue1);
+      if (document.getElementById("pie-chart") && typeof ApexCharts !== 'undefined') {
+        const chart = new ApexCharts(document.getElementById("pie-chart"), {
+          series: this.chartvalue1,
+          colors: ["#1C64F2", "#16BDCA", "#9061F9"],
+          chart: {
+            height: 420,
+            width: "100%",
+            type: "pie",
+          },
+          stroke: {
+            colors: ["white"],
+            lineCap: "",
+          },
+          plotOptions: {
+            pie: {
+              labels: {
+                show: true,
+              },
+              size: "100%",
+              dataLabels: {
+                offset: -25
+              }
+            },
+          },
+          labels: ["Lower-secondary", "Upper-secondary", "Primary"],
+          dataLabels: {
+            enabled: true,
+            style: {
+              fontFamily: "Inter, sans-serif",
+            },
+          },
+          legend: {
+            position: "bottom",
+            fontFamily: "Inter, sans-serif",
+          },
+          yaxis: {
+            labels: {
+              formatter: function (value) {
+                return value + ""
+              },
+            },
+          },
+          xaxis: {
+            labels: {
+              formatter: function (value) {
+                return value + "%"
+              },
+            },
+            axisTicks: {
+              show: false,
+            },
+            axisBorder: {
+              show: false,
+            },
+          },
+        });
+        chart.render();
+      }
+    })
+      .catch(error => {
+        console.error(error);
+      });
+
 
   },
-
 
 
   created() {
@@ -323,6 +457,7 @@ new Vue({
     this.loadClassName();
     this.subjectsForUser();
     this.getmyattendance();
+
   },
 
   computed: {
@@ -575,6 +710,40 @@ new Vue({
         .catch(error => {
           console.error(error);
         });
+    },
+    getStudentUsersfiltered() {
+      return new Promise((resolve, reject) => {
+        axios.get('/admin/getStudentUsersfiltered')
+          .then(response => {
+            this.chartvalue1 = response.data.data;
+            resolve(); // Resolve the promise
+          })
+          .catch(error => {
+            console.error(error);
+            reject(error); // Reject the promise with the error
+          });
+      });
+    },
+    getStudentUsersfiltered2() {
+      return new Promise((resolve, reject) => {
+        axios.get('/admin/getStudentUsersfiltered2')
+          .then(response => {
+            for (let i = 0; i < response.data.data.length; i++) {
+              if(response.data.data[i].documentCount > 0){
+                this.chartvalue2.push(response.data.data[i].documentCount);
+              }
+              else{
+                this.chartvalue2.push(0);
+              }
+             
+            }
+            resolve(); // Resolve the promise
+          })
+          .catch(error => {
+            console.error(error);
+            reject(error); // Reject the promise with the error
+          });
+      });
     },
     getAdminUsers() {
       axios.get('/admin/getAdminUsers')

@@ -93,6 +93,8 @@ router.get('/upper-secondary-student/upper-secondary-student-dashboard', authori
 
 router.route('/user/login').post(userController.login);
 router.route('/admin/getStudentUsers').get(userController.getStudentUsers);
+router.route('/admin/getStudentUsersfiltered').get(userController.getStudentUsersfiltered);
+router.route('/admin/getStudentUsersfiltered2').get(userController.getStudentUsersfiltered2);
 router.route('/admin/getTeacherUsers').get(userController.getTeacherUsers);
 router.route('/admin/getAdminUsers').get(userController.getAdminUsers);
 router.route('/admin/createUser').post(userController.createUser);
