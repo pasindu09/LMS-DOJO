@@ -178,9 +178,6 @@ new Vue({
     
 
     
-    
-
-
 
       classOptions: ['1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C', '4A', '4B', '4C', '5A', '5B', '5C', '6A', '6B', '6C', '7A', '7B', '7C', '8A', '8B', '8C', '9A', '9B', '9C', '10A', '10B', '10C', '11A', '11B', '11C', '12A', '12B', '12C'],
       user: {
@@ -380,7 +377,29 @@ new Vue({
 
     buttonText() {
       return this.hasGrade ? 'Edit marks' : 'Add grades';
-    }
+    },
+
+
+    totalStudents() {
+      return this.studentUserCount;
+    },
+  
+    // Computed property for Total Activities
+    totalActivities() {
+      return this.activities.length;
+    },
+  
+    // Computed property for Average Quiz Score
+    averageQuizScore() {
+      const quizScores = this.grades.map(grade => grade.grade);
+      const totalScore = quizScores.reduce((total, score) => total + score, 0);
+      return totalScore / quizScores.length;
+    },
+  
+    // Computed property for Pending Submissions
+    pendingSubmissions() {
+      return this.submissions.filter(submission => submission.submissionStatus === 'Pending').length;
+    },
 
 
   },
@@ -1391,8 +1410,6 @@ new Vue({
           console.error(error);
         });
     },
-
-
 
 
 

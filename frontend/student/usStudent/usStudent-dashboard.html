@@ -2,14 +2,14 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>us-student dashboard</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>us-student dashboard</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
 </head>
 
@@ -27,25 +27,36 @@
           </a>
         </ul>
         <ul class="text-lg flex-grow font-bold">
-          <a href="#" style="font-size: 1.2em; text-decoration: none;">Timetable</a>
+          <a href="../../student/usStudent/usStudent-Timetable.html"
+            style="font-size: 1.2em; text-decoration: none;">Timetable</a>
         </ul>
         <ul class="text-lg flex-grow font-bold">
-          <a href="../../view-activities.html" style="font-size: 1.2em;text-decoration: none;">My Activities</a>
+          <a href="../../student/usStudent/usStudent-Activities.html" style="font-size: 1.2em;text-decoration: none;">My
+            Activities</a>
         </ul>
         <ul class="text-lg flex-grow font-bold">
           <a href="#" style="font-size: 1.2em;text-decoration: none;">Progress</a>
         </ul>
-        <ul class="text-lg flex-grow mr-12 font-bold">
-          <a @click="getmyattendance" href="../../usStudentAttendance.html" style="font-size: 1.2em;text-decoration: none;">Attendance</a>
+        <ul class="text-lg flex-grow font-bold">
+          <a @click="getmyattendance" href="../../student/usStudent/usStudent-Attendance.html"
+            style="font-size: 1.2em;text-decoration: none;">Attendance</a>
         </ul>
-      </div> <div class="p-4 flex-col ml-auto items-center">
+        <ul class="text-lg flex-grow font-bold">
+          <a href="../../student/usStudent/usStudent-Event-Calendar.html" style="font-size: 1.2em;text-decoration: none;">Event Calendar</a>
+      </ul>
+        <ul class="text-lg flex-grow font-bold">
+          <a href="../../index.html" style="font-size: 1.2em;text-decoration: none;">Log out</a>
+        </ul>
+      </div>
+      <div class="p-4 flex-col ml-auto items-center">
         <div style="font-size: 1.3em;text-decoration: none;" class="text-orange-500 font-bold">Welcome back!</div>
         <div class="text-3xl font-bold">{{userName}}</div>
       </div>
     </div>
 
     <div class="flex flex-wrap justify-center mx-4 my-8 bg-white">
-      <div v-for="subject in arrayofsubjects" class="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-white border border-gray-300 shadow-xl hover:shadow-2xl transition duration-300 ease-in-out m-4 rounded-md">
+      <div v-for="subject in arrayofsubjects"
+        class="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-white border border-gray-300 shadow-xl hover:shadow-2xl transition duration-300 ease-in-out m-4 rounded-md">
         <img src="../../assets/images/physic.jpg" alt="Cover Image" class="object-cover w-full h-full rounded-md">
         <div class="absolute inset-0 flex items-center justify-center">
           <p class="text-center bg-orange-500 text-xl font-medium text-white p-2 rounded">{{subject}}</p>

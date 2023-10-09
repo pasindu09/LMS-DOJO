@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+</head>
+
+
+
+<body class="bg-gray-100 font-sans">
+
+    <div id="app">
+
+        <div class="flex border-b border-gray-300 bg-white" style="height: 13vh;">
+            <div class="flex w-3/5 p-4 items-center">
+                <ul class="text-lg flex-grow ml-12 font-bold">
+                    <a href="../../student/usStudent/usStudent-dashboard.html"
+                        style="font-size: 1.2em;text-decoration: none;">
+                        Dashboard
+                    </a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a href="../../student/usStudent/usStudent-Timetable.html"
+                        style="font-size: 1.2em; text-decoration: none;">Timetable</a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a href="../../student/usStudent/usStudent-Activities.html" style="font-size: 1.2em;text-decoration: none;">My
+                            Activities</a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a href="#" style="font-size: 1.2em;text-decoration: none;">Progress</a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a @click="getmyattendance" href="../../student/usStudent/usStudent-Attendance.html"
+                        style="font-size: 1.2em;text-decoration: none;">Attendance</a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a href="#" style="font-size: 1.2em;text-decoration: none;"><span
+                        class="border-b-4 border-orange-500 text-gray-800">Event Calendar</span></a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a href="../../index.html" style="font-size: 1.2em;text-decoration: none;">Log out</a>
+                </ul>
+            </div>
+            <div class="p-4 flex-col ml-auto items-center">
+                <div style="font-size: 1.3em;text-decoration: none;" class="text-orange-500 font-bold">Welcome back!
+                </div>
+                <div class="text-3xl font-bold">{{userName}}</div>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg px-6 py-4 mt-4 mx-12">
+            <h2 class="text-2xl font-semibold mb-4">Event Calendar</h2>
+        
+            <div v-if="loading">Loading events...</div>
+        
+            <div v-else>
+                <div v-for="event in events" :key="event.id" class="shadow-lg px-6 py-4 mb-4 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="w-72 h-40 mr-4 overflow-hidden object-cover rounded-xl">
+                            <img :src="event.eventImage" alt="Event Image" class="w-full h-full object-cover">
+                        </div>
+                        <div class="ml-6">
+                            <h3 class="text-3xl font-semibold">{{ event.eventName }}</h3>
+                            <p class="text-gray-500 mt-2"> {{ formatDate(event.eventDate) }} | | {{ event.eventTime }} | | {{ event.eventLocation }}</p>
+                            <p class="text-gray-500 mt-4">{{ event.eventDescription }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+
+    </div>
+
+    <script src="../../app.js"></script>
+
+</body>
+
+
+</html>

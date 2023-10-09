@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time table</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+</head>
+
+
+
+<body class="bg-gray-100 font-sans">
+
+    <div id="app">
+
+        <div class="flex border-b border-gray-300 bg-white" style="height: 13vh;">
+            <div class="flex w-3/5 p-4 items-center">
+                <ul class="text-lg flex-grow ml-12 font-bold">
+                    <a href="../../student/usStudent/usStudent-dashboard.html"
+                        style="font-size: 1.2em;text-decoration: none;">
+                        Dashboard
+                    </a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a href="" style="font-size: 1.2em; text-decoration: none;"><span
+                            class="border-b-4 border-orange-500 text-gray-800">Timetable</span></a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a href="../../student/usStudent/usStudent-Activities.html" style="font-size: 1.2em;text-decoration: none;">My
+                        Activities</a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a href="#" style="font-size: 1.2em;text-decoration: none;">Progress</a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a @click="getmyattendance" href="../../student/usStudent/usStudent-Attendance.html"
+                        style="font-size: 1.2em;text-decoration: none;">Attendance</a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a href="../../student/usStudent/usStudent-Event-Calendar.html" style="font-size: 1.2em;text-decoration: none;">Event Calendar</a>
+                </ul>
+                <ul class="text-lg flex-grow font-bold">
+                    <a href="../../index.html" style="font-size: 1.2em;text-decoration: none;">Log out</a>
+                </ul>
+            </div>
+            <div class="p-4 flex-col ml-auto items-center">
+                <div style="font-size: 1.3em;text-decoration: none;" class="text-orange-500 font-bold">Welcome back!
+                </div>
+                <div class="text-3xl font-bold">{{userName}}</div>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse table-auto bg-white">
+                <!-- Table header -->
+                <thead>
+                    <tr>
+                        <th class="p-4 border-8 border-[#f0f0e8] bg-cyan-700">Time</th>
+                        <th class="p-4 border-8 border-[#f0f0e8] bg-[#ede4b8]">Monday</th>
+                        <th class="p-4 border-8 border-[#f0f0e8] bg-[#ede4b8]">Tuesday</th>
+                        <th class="p-4 border-8 border-[#f0f0e8] bg-[#ede4b8]">Wednesday</th>
+                        <th class="p-4 border-8 border-[#f0f0e8] bg-[#ede4b8]">Thursday</th>
+                        <th class="p-4 border-8 border-[#f0f0e8] bg-[#ede4b8]">Friday</th>
+                    </tr>
+                </thead>
+                <!-- Table body -->
+                <tbody>
+                    <tr v-for="(entry, index) in timetableData" :key="index" class="text-center">
+                        <td class="text-white p-4 border-8 border-[#f0f0e8] bg-cyan-700 font-semibold">{{ entry.time }}</td>
+                        <td class="p-4 border-8 border-[#f0f0e8] bg-[#e6e6de] font-semibold">{{ entry.Monday }}</td>
+                        <td class="p-4 border-8 border-[#f0f0e8] bg-[#e6e6de] font-semibold">{{ entry.Tuesday }}
+                        </td>
+                        <td class="p-4 border-8 border-[#f0f0e8] bg-[#e6e6de] font-semibold">{{ entry.Wednesday }}
+                        </td>
+                        <td class="p-4 border-8 border-[#f0f0e8] bg-[#e6e6de] font-semibold">{{ entry.Thursday }}
+                        </td>
+                        <td class="p-4 border-8 border-[#f0f0e8] bg-[#e6e6de] font-semibold">{{ entry.Friday }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+    <script src="../../app.js"></script>
+
+</body>
+
+
+</html>
